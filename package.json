@@ -2,11 +2,11 @@
   "name": "proyectogrado",
   "version": "1.0.0",
   "description": "Web app para anotar tweets de odio",
-  "main": "index.js",
+  "main": "bin/www",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node_modules/.bin/nodemon webapp/bin/www",
+    "start": "cross-env NODE_ENV=production node_modules/.bin/nodemon",
     "seed_test_db": "cross-env NODE_ENV=test DB_HOST=\"localhost\" DB_USER=\"test\" DB_PASS=\"test\" DB_NAME=\"pgodio\" node_modules/.bin/knex seed:run",
-    "test": "cross-env DB_HOST=\"localhost\" DB_USER=\"test\" DB_PASS=\"test\" DB_NAME=\"pgodio\" SESSION_COOKIE_SECRET=\"secret\" DEBUG=webapp:* node_modules/.bin/nodemon webapp/bin/www"
+    "test": "cross-env DB_HOST=\"localhost\" DB_USER=\"test\" DB_PASS=\"test\" DB_NAME=\"pgodio\" SESSION_COOKIE_SECRET=\"secret\" DEBUG=idors:* node_modules/.bin/nodemon"
   },
   "repository": {
     "type": "git",
