@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/manuel-saravia/proygrado2019-IDORS.git"
+    "url": "git+https://github.com/luchong12/IDORS-web.git"
   },
   "author": "Lucas Kunc",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/manuel-saravia/proygrado2019-IDORS/issues"
+    "url": "https://github.com/luchong12/IDORS-web/issues"
   },
-  "homepage": "https://github.com/manuel-saravia/proygrado2019-IDORS#readme",
+  "homepage": "https://github.com/luchong12/IDORS-web.git#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",
