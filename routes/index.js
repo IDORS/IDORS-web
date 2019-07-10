@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const debug = require('debug')('webapp:router');
+const debug = require('debug')('idors:router');
 
 const tweetsModel = require('../models/tweets');
 
