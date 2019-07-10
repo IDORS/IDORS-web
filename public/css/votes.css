@@ -1,0 +1,133 @@
+.vote {
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#humor-container:hover .vote {
+  clip: auto;
+  overflow: visible;
+  opacity: 1;
+}
+
+.vote {
+  border: none;
+  background: transparent url('../img/votes.png');
+  display: block;
+  cursor: pointer;
+  height: 48px;
+  position: absolute;
+  width: 48px;
+  z-index: 11;
+  transform-origin: 50% 100%;
+  transform: scale(0.1);
+  transition: all 0.3s;
+  outline: none;
+  will-change: transform;
+  opacity: 0;
+  visibility: hidden;
+}
+
+#humor-container {
+  position: relative;
+}
+
+#toolbox {
+  background: #fff;
+  height: 52px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 2px rgba(0, 0, 0, 0.15);
+  width: 250px;
+  border-radius: 40px;
+  top: -50px;
+  left: -75px;
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+#votes {
+  position: absolute;
+  left: -75px;
+}
+
+.legend-vote {
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 10px;
+  box-sizing: border-box;
+  color: #fff;
+  display: inline-block;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  font-weight: bold;
+  line-height: 20px;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 6px;
+  transition: opacity 50ms ease;
+  left: 50%;
+  position: absolute;
+  text-align: center;
+  top: -28px;
+  transform: translateX(-50%);
+}
+
+#humor-container:hover .vote {
+  transform: scale(0.8) translateY(-65px);
+  visibility: visible;
+}
+
+#humor-container:hover .vote:hover,
+#humor-container:hover .vote:focus {
+  transition: all 0.1s ease-in;
+  transform: scale(1) translateY(-60px);
+  visibility: visible;
+}
+
+#humor-container:hover .vote:hover .legend-vote,
+#humor-container:hover .vote:focus .legend-vote {
+  opacity: 1;
+}
+
+#humor-container:hover #toolbox {
+  opacity: 1;
+  visibility: visible;
+}
+
+#humor-container:hover #vote-2 {
+  transition-delay: 0.03s;
+}
+
+#humor-container:hover #vote-3 {
+  transition-delay: 0.06s;
+}
+
+#humor-container:hover #vote-4 {
+  transition-delay: 0.09s;
+}
+
+#humor-container:hover #vote-5 {
+  transition-delay: 0.12s;
+}
+
+#vote-2 {
+  background-position: 0 -48px;
+  left: 50px;
+}
+
+#vote-3 {
+  background-position: 0 -96px;
+  left: 100px;
+}
+
+#vote-4 {
+  background-position: 0 -144px;
+  left: 150px;
+}
+
+#vote-5 {
+  background-position: 0 -192px;
+  left: 200px;
+}

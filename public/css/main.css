@@ -1,0 +1,184 @@
+body {
+  height: 100%;
+  position: relative;
+}
+
+.main-content {
+  min-height: 100vh;
+  overflow: hidden;
+  padding-bottom: 50px;
+}
+
+#home-content {
+  clear: both;
+  text-align: center;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+h2 {
+  font-size: 20px;
+  color: #777777;
+}
+
+.tweet {
+  border-radius: 5px;
+  border: 1px solid #e1e8ed;
+  display: flex;
+  margin: 30px auto;
+  max-width: 500px;
+  min-height: 150px;
+  padding: 20px;
+}
+
+.tweet-logo {
+  float: right;
+  height: 20px;
+  margin-left: auto;
+  width: 20px;
+}
+
+.tweet-text {
+  color: #1c2022;
+  cursor: text;
+  font-family: Helvetica, Roboto, "Segoe UI", Calibri, sans-serif;
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.4;
+  margin: auto;
+  white-space: pre-wrap;
+  width: 100%;
+  word-wrap: break-word;
+}
+
+#form-container {
+  display: inline-grid;
+  text-align: left;
+}
+
+#question {
+  display: inline-block;
+  margin-bottom: 30px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+#answers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  list-style-type: none;
+  padding: 0;
+}
+
+.answer {
+  display: inline;
+  margin: 0 20px 20px 20px;
+}
+
+.btn-answer {
+  min-width: 100px;
+}
+
+#humor:focus,
+#humor:hover,
+#humor:active,
+#humor.active.focus,
+#humor.active:focus,
+#humor.active:hover,
+#humor:active.focus,
+#humor:active:focus,
+#humor:active:hover,
+.open > .dropdown-toggle#humor.focus,
+.open > .dropdown-toggle#humor:focus,
+.open > .dropdown-toggle#humor:hover {
+  background-color: #fafafa;
+  border-color: #ddd;
+  box-shadow: none;
+  color: #333;
+  cursor: default;
+  outline: none;
+}
+
+#not-humor.no-hover:hover {
+  background-color: #fff;
+  border-color: #ccc;
+  color: #333;
+  transition-delay: 75ms;
+}
+
+#humor-container {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+#funniness-container {
+  display: inline-flex;
+  flex-wrap: wrap;
+  margin: auto;
+}
+
+#funniness-question {
+  margin: auto;
+}
+
+#skip {
+  font-size: 14px;
+  margin: 16px 16px 16px 10px;
+  min-width: 100px;
+  padding: 0;
+  text-decoration: none;
+}
+
+#is-offensive-label {
+  font-weight: normal;
+  /*margin: 0 20px 50px 20px;*/
+  margin-top: 16px;
+  text-align: center;
+}
+
+#is-offensive {
+  vertical-align: top;
+}
+
+#about-us-content {
+  display: none;
+}
+
+footer {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  text-align: center;
+}
+
+.row {
+  align-items: flex-end;
+  display: flex;
+}
+
+#social-buttons-container {
+  margin-bottom: 6px;
+}
+
+.fb-share-button {
+  margin-bottom: 3px;
+  margin-right: 3px;
+  vertical-align: bottom;
+}
+
+.fb_iframe_widget_fluid {
+  display: inline-block !important;
+}
+
+.twitter-share-button {
+  margin-bottom: 3px;
+  vertical-align: bottom;
+}
+
+.wa_btn {
+  vertical-align: bottom;
+}
