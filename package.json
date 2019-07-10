@@ -1,0 +1,36 @@
+{
+  "name": "proyectogrado",
+  "version": "1.0.0",
+  "description": "Web app para anotar tweets de odio",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node_modules/.bin/nodemon webapp/bin/www",
+    "seed_test_db": "cross-env NODE_ENV=test DB_HOST=\"localhost\" DB_USER=\"test\" DB_PASS=\"test\" DB_NAME=\"pgodio\" node_modules/.bin/knex seed:run",
+    "test": "cross-env DB_HOST=\"localhost\" DB_USER=\"test\" DB_PASS=\"test\" DB_NAME=\"pgodio\" SESSION_COOKIE_SECRET=\"secret\" DEBUG=webapp:* node_modules/.bin/nodemon webapp/bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manuel-saravia/proygrado2019-IDORS.git"
+  },
+  "author": "Lucas Kunc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manuel-saravia/proygrado2019-IDORS/issues"
+  },
+  "homepage": "https://github.com/manuel-saravia/proygrado2019-IDORS#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "express-mysql-session": "^2.1.0",
+    "express-session": "^1.16.2",
+    "http-errors": "^1.7.2",
+    "knex": "^0.18.3",
+    "morgan": "~1.9.1",
+    "mysql2": "^1.6.5"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "nodemon": "^1.19.1"
+  }
+}
