@@ -36,13 +36,19 @@ router.post('/vote', async function(req, res, next) {
     try {
         debug(req.body.tweetId, req.body.isOffensive, req.body.isHateful);
 
-        const {tweetId, isOffensive, isHateful} = req.body;
+        const {tweetId, isOffensive, isHateful, skip} = req.body;
 
         /* if (typeof tweetId !== 'string' || typeof isOffensive !== 'boolean' || typeof isHateful !== 'number')
             throw Error('Invalid input'); */
 
-        await tweetsModel.saveVote(tweetId, isHateful, isOffensive);
-        debug('Inserted correctly');
+        if (skip == 'true') {
+            await tweetsModel.skipTweet(tweetId);
+        } else if (skip == 'false'){
+            await tweetsModel.saveVote(tweetId, isHateful, isOffensive);
+            debug('Inserted correctly');
+        } else {
+            throw Error('Skip value is invalid.')
+        } 
 
         const tweets = await tweetsModel.getRandomNotDone(1);
 
