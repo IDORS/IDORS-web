@@ -31,7 +31,14 @@ exports.getRandomClassified = async function(limit) {
     return tweet;
 }
 
+exports.skipTweet = async function(tweetId) {
+    return await db.query(`UPDATE tweets 
+                           SET tweets.skip_count = tweets.skip_count + 1 
+                           WHERE tweets.id = ? `, [tweetId]);
+}
+
 exports.saveVote = async function(tweetId, isHateful, isOffensive) {
     return await db.query(`INSERT INTO votesIsHateful (is_hateful, is_offensive, tweet_id)
                             VALUES (?, ?, ?)`, [isHateful, isOffensive, tweetId])
 }
+
