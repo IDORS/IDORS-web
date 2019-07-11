@@ -178,7 +178,7 @@ function setUiListeners() {
     }); */
 
     $skip.click(function () {
-        vote(2);
+        vote('2', true);
     });
 
     $('button').mouseup(function () {
@@ -186,7 +186,7 @@ function setUiListeners() {
     });
 }
 
-function vote(voteOption) {
+function vote(voteOption, skip) {
     const oldIndex = index;
     index = (index + 1) % tweets.length;
 
@@ -195,6 +195,7 @@ function vote(voteOption) {
     $.post('vote', {
         tweetId: tweets[oldIndex].id,
         isHateful: voteOption,
+        skip,
         ignore_tweet_ids: [tweets[index].id, tweets[otherIndex].id],
         isOffensive: ($isOffensive.prop('checked') == true) ? '1' : '0',
     }, function (tweet) {
