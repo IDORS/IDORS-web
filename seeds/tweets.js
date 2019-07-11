@@ -39,7 +39,6 @@ exports.seed = function(knex) {
   return knex('tweets').del()
     .then(() => {
       let tweets = getTweets();
-      console.log(tweets)
       return tweets;
     })
     .then((unmergedTweets) => [].concat.apply([], unmergedTweets))
