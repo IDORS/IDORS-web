@@ -186,7 +186,7 @@ function setUiListeners() {
     });
 }
 
-function vote(voteOption, skip) {
+function vote(voteOption, skip=false) {
     const oldIndex = index;
     index = (index + 1) % tweets.length;
 
