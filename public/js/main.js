@@ -45,7 +45,7 @@ $(document).ready(function () {
 function setupElements() {
     $star = $('*');
     $homeContent = $('#home-content');
-    $tweet = $('#tweet-text');
+    $tweet = $('#unk-tweet-text');
     $hatefulTweet = $('#hateful-tweet-text');
     $hatefulTweetModal = $('#hate');
     $odio = $('#odio');
