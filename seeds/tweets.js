@@ -28,31 +28,36 @@ let getTweets = () => {
 }
 
 let createRecord = (knex, data) => {
-  return knex('tweets').insert({
-    id   : data.id,
-    user : data.user,
-    text : data.text,
-  })
+  return knex('tweets')
+          .insert({
+            id   : data.id,
+            user : data.user,
+            text : data.text,
+          })
+          .whereNotExists(
+            knex('tweets')
+              .select('*')
+              .where('id', data.id));
 };
 
 exports.seed = function(knex) {
-  return knex('tweets').del()
-    .then(() => {
-      let tweets = getTweets();
-      console.log(tweets)
-      return tweets;
-    })
-    .then((unmergedTweets) => [].concat.apply([], unmergedTweets))
-    .then((allTweets) => {
-      let tweetPromises = [];
+  return knex('tweets')
+          .del()
+          .then(() => {
+            let tweets = getTweets();
+            return tweets;
+          })
+          .then((unmergedTweets) => [].concat.apply([], unmergedTweets))
+          .then((allTweets) => {
+            let tweetPromises = [];
 
-      let ids = new Set();
+            let ids = new Set();
 
-      allTweets.forEach((tweet) => {
-        let {id, user, text} = tweet;
-        tweetPromises.push(createRecord(knex, {id, user, text}));
-      })
+            allTweets.forEach((tweet) => {
+              let {id, user, text} = tweet;
+              tweetPromises.push(createRecord(knex, {id, user, text}));
+            })
 
-      return Promise.all(tweetPromises);
-    });
+            return Promise.all(tweetPromises);
+          });
 };
