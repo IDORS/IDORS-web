@@ -26,13 +26,13 @@ exports.getRandomNotDone = async function(limit, tweetsSeen) {
     return tweets;
 }
 
-exports.getRandomClassified = async function() {
-    const [tweet] = await db.query(`SELECT tweets.id, user, text
+exports.getRandomClassified = async function(limit) {
+    const [tweets] = await db.query(`SELECT tweets.id, user, text
                                     FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
                                     WHERE votesIsHateful.is_hateful = 1
                                     ORDER BY RAND()
-                                    LIMIT 1`);
-    return tweet;
+                                    LIMIT ?`, [limit]);
+    return tweets;
 }
 
 exports.skipTweet = async function(tweetId) {
@@ -46,3 +46,7 @@ exports.saveVote = async function(tweetId, isHateful, isOffensive) {
                             VALUES (?, ?, ?)`, [isHateful, isOffensive, tweetId])
 }
 
+exports.saveHateTypeVote = async function(tweetId, hateType) {
+    return await db.query(`INSERT INTO votesHateType (hate_type, tweet_id)
+                            VALUES (?, ?)`, [hateType, tweetId])
+}

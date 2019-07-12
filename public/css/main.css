@@ -58,14 +58,14 @@ h2 {
   text-align: left;
 }
 
-#question {
+.question {
   display: inline-block;
   margin-bottom: 30px;
   margin-top: 20px;
   text-align: center;
 }
 
-#answers {
+.answers {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
