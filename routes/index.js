@@ -24,9 +24,9 @@ router.get('/tweets/classified/random', async function(req, res, next) {
         next();
     
     try {
-        const tweet = await tweetsModel.getRandomClassified();
+        const tweet = await tweetsModel.getRandomClassified(1);
         debug('Selected:', tweet);
-        res.send(tweet);
+        res.send(tweet[0]);
     } catch(error) {
         next(error);
     }
@@ -45,6 +45,26 @@ router.post('/vote', async function(req, res, next) {
         debug('Inserted correctly');
 
         const tweets = await tweetsModel.getRandomNotDone(1);
+
+        res.send(tweets[0]);
+    } catch(error) {
+        next(error);
+    }
+});
+
+router.post('/vote/hateType', async function(req, res, next) {
+    try {
+        debug(req.body.tweetId, req.body.hateType);
+
+        const {tweetId, hateType} = req.body;
+
+        /* if (typeof tweetId !== 'string' || typeof isOffensive !== 'boolean' || typeof isHateful !== 'number')
+            throw Error('Invalid input'); */
+
+        await tweetsModel.saveHateTypeVote(tweetId, hateType);
+        debug('Inserted correctly');
+
+        const tweets = tweetsModel.getRandomClassified(1);
 
         res.send(tweets[0]);
     } catch(error) {
