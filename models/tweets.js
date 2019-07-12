@@ -12,17 +12,21 @@ exports.getRandom = async function(limit) {
     return tweets;
 }
 
-exports.getRandomNotDone = async function(limit) {
+exports.getRandomNotDone = async function(limit, tweetsSeen) {
+    if(!tweetsSeen || tweetsSeen.length === 0)
+        tweetsSeen = ""
+
     const [tweets] = await db.query(`SELECT tweets.id, user, text
                                     FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
+                                    WHERE FIND_IN_SET(tweets.id, "?") = 0
                                     GROUP BY tweets.id
                                     HAVING COUNT(votesIsHateful.id) < 5
                                     ORDER BY COUNT(votesIsHateful.id), RAND()
-                                    LIMIT ?`, [limit]);
+                                    LIMIT ?`, [tweetsSeen,limit]);
     return tweets;
 }
 
-exports.getRandomClassified = async function(limit) {
+exports.getRandomClassified = async function() {
     const [tweet] = await db.query(`SELECT tweets.id, user, text
                                     FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
                                     WHERE votesIsHateful.is_hateful = 1

@@ -10,8 +10,20 @@ router.get('/tweets/random', async function(req, res, next) {
         next();
     
     try {
-        const tweets = await tweetsModel.getRandomNotDone(3);
+        let excluded = [];
+        if(req.session.votedTweets)
+            excluded = excluded.concat(req.session.votedTweets);
+        if(req.session.skippedTweets)
+            excluded = excluded.concat(req.session.skippedTweets);
+        
+        let tweets = await tweetsModel.getRandomNotDone(3, excluded);
+        if(tweets.length === 0) {
+            req.session.skippedTweets = []
+            tweets = await tweetsModel.getRandomNotDone(3, req.session.votedTweets);
+        }
+        debug('Excluded:', excluded);
         debug('Selected:', tweets);
+        
         res.send(tweets);
     } catch(error) {
         next(error);
@@ -38,17 +50,25 @@ router.post('/vote', async function(req, res, next) {
 
         const {tweetId, isOffensive, isHateful, skip} = req.body;
 
-        /* if (typeof tweetId !== 'string' || typeof isOffensive !== 'boolean' || typeof isHateful !== 'number')
-            throw Error('Invalid input'); */
-
-        if (skip == 'true') {
+        let votedOrSkipped;
+        if (skip === 'true') {
             await tweetsModel.skipTweet(tweetId);
-        } else if (skip == 'false'){
+            votedOrSkipped = 'skippedTweets';
+        } else if (skip === 'false'){
             await tweetsModel.saveVote(tweetId, isHateful, isOffensive);
             debug('Inserted correctly');
+            votedOrSkipped = 'votedTweets';
         } else {
-            throw Error('Skip value is invalid.')
-        } 
+            throw new Error('Skip value is invalid.')
+        }
+    
+        if(req.session[votedOrSkipped]) {
+            const votedOrSkippedSet = new Set(req.session[votedOrSkipped]);
+            votedOrSkippedSet.add(tweetId);
+            req.session[votedOrSkipped] = [...votedOrSkippedSet]
+        } else {
+            req.session[votedOrSkipped] = [tweetId];
+        }
 
         const tweets = await tweetsModel.getRandomNotDone(1);
 
