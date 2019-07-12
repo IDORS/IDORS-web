@@ -5,7 +5,7 @@ let $homeContent;
 let $tweet;
 let $hatefulTweet;
 let $hatefulTweetModal;
-let $odio;
+let $hate;
 /* let $votesAndToolbox;
 let $toolbox;
 let $voteClass; 
@@ -15,7 +15,7 @@ let $voteR;
 let $voteM;
 let $voteP;
 let $voteO;
-let $notOdio;
+let $notHate;
 let $skip;
 let $isOffensive;
 
@@ -47,8 +47,8 @@ function setupElements() {
     $homeContent = $('#home-content');
     $tweet = $('#unk-tweet-text');
     $hatefulTweet = $('#hateful-tweet-text');
-    $hatefulTweetModal = $('#hate');
-    $odio = $('#odio');
+    $hatefulTweetModal = $('#hate-modal');
+    $hate = $('#hate');
     /* $votesAndToolbox = $('#votes,#toolbox');
     $toolbox = $('#toolbox');
     $voteClass = $('.vote');
@@ -58,7 +58,7 @@ function setupElements() {
     $voteM = $('#misoginy');
     $voteP = $('#political');
     $voteO = $('#other');
-    $notOdio = $('#not-odio');
+    $notHate = $('#not-hate');
     $skip = $('#skip');
     $isOffensive = $('#is-offensive');
 }
@@ -140,22 +140,22 @@ function setUiListeners() {
         $votesAndToolbox.css('display', '');
     }); */
 
-    $odio.click(function () {
+    $hate.click(function () {
         vote('1');
-        $odio.addClass('no-hover');
+        $hate.addClass('no-hover');
     });
 
-    $odio.on('mousemove mouswdown', function () {
-        $odio.removeClass('no-hover');
+    $hate.on('mousemove mouswdown', function () {
+        $hate.removeClass('no-hover');
     });
 
-    $notOdio.click(function () {
+    $notHate.click(function () {
         vote('0');
-        $notOdio.addClass('no-hover');
+        $notHate.addClass('no-hover');
     });
 
-    $notOdio.on('mousemove mouswdown', function () {
-        $notOdio.removeClass('no-hover');
+    $notHate.on('mousemove mouswdown', function () {
+        $notHate.removeClass('no-hover');
     });
 
     $voteM.click(function () {
