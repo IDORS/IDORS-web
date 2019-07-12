@@ -212,8 +212,6 @@ function vote(voteOption) {
 
     $.mdtoast(toastText(voteOption), {duration: 3000});
 
-    //$votesAndToolbox.fadeOut();
-
     $isOffensive.prop('checked', false);
 }
 
@@ -229,8 +227,6 @@ function voteType(voteOption) {
     $hatefulTweetModal.modal('hide');
 
     $.mdtoast(toastText(voteOption), {duration: 3000});
-
-    //$votesAndToolbox.fadeOut();
 }
 
 function toastText(voteOption) {
