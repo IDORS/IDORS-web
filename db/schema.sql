@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `pgodio`.`votesIsHateful` (
   `tweet_id` VARCHAR(21) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `tweet_id_idx` (`tweet_id` ASC),
-  FOREIGN KEY (`tweet_id`) REFERENCES `pgodio`.`tweets` (`id`)
+  FOREIGN KEY (`tweet_id`) REFERENCES `pgodio`.`tweets` (`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `pgodio`.`votesHateType` (
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `pgodio`.`votesHateType` (
   `tweet_id` VARCHAR(21) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `tweet_id_idx` (`tweet_id` ASC),
-  FOREIGN KEY (`tweet_id`) REFERENCES `pgodio`.`tweets` (`id`)
+  FOREIGN KEY (`tweet_id`) REFERENCES `pgodio`.`tweets` (`id`) ON DELETE CASCADE
 );
 
 /* TODO: how would we associate the vote to the user when retrieving already voted tweets? */
