@@ -1,32 +1,33 @@
 /* eslint-disable no-undef */
 
-//let $star;
-//let $homeContent;
+let $star;
+let $homeContent;
 let $tweet;
 let $hatefulTweet;
+let $hatefulTweetModal;
 let $odio;
 /* let $votesAndToolbox;
 let $toolbox;
-let $voteClass;
-let $vote1;
-let $vote2;
-let $vote3;
-let $vote4;
-let $vote5; 
+let $voteClass; 
 let $legendVote; */
+let $voteH;
+let $voteR;
+let $voteM;
+let $voteP;
+let $voteO;
 let $notOdio;
 let $skip;
 let $isOffensive;
 
 // let legendsShownForFirstTime = false;
 
-/* const voteCodeToText = {
-    1: "Nada gracioso",
-    2: "Poco gracioso",
-    3: "Regular",
-    4: "Bueno",
-    5: "¡Buenísimo!"
-}; */
+const voteCodeToText = {
+    'homophobia': "Homofóbico",
+    'racism': "Racista",
+    'misoginy': "Misógino",
+    'political': "Ideológico",
+    'other': "Otro"
+};
 
 let tweets = [];
 let classifiedTweet = {};
@@ -51,12 +52,12 @@ function setupElements() {
     /* $votesAndToolbox = $('#votes,#toolbox');
     $toolbox = $('#toolbox');
     $voteClass = $('.vote');
-    $vote1 = $('#vote-1');
-    $vote2 = $('#vote-2');
-    $vote3 = $('#vote-3');
-    $vote4 = $('#vote-4');
-    $vote5 = $('#vote-5');
     $legendVote = $('.legend-vote'); */
+    $voteH = $('#homophobia');
+    $voteR = $('#racism');
+    $voteM = $('#misoginy');
+    $voteP = $('#political');
+    $voteO = $('#other');
     $notOdio = $('#not-odio');
     $skip = $('#skip');
     $isOffensive = $('#is-offensive');
@@ -78,7 +79,7 @@ function showTweetModal() {
         showTweet();
     } else {
         $hatefulTweet.fadeOut(200, function () {
-            $hatefulTweet.html(classifiedTweet[0].text.replace(/\n/mg, '<br/>'));
+            $hatefulTweet.html(classifiedTweet.text.replace(/\n/mg, '<br/>'));
             $hatefulTweet.fadeIn(200);
         });
         $hatefulTweetModal.modal({
@@ -157,25 +158,25 @@ function setUiListeners() {
         $notOdio.removeClass('no-hover');
     });
 
-    /* $vote1.click(function () {
-        vote('1');
+    $voteM.click(function () {
+        voteType('misoginy');
     });
 
-    $vote2.click(function () {
-        vote('2');
+    $voteR.click(function () {
+        voteType('racism');
     });
 
-    $vote3.click(function () {
-        vote('3');
+    $voteH.click(function () {
+        voteType('homophobia');
     });
 
-    $vote4.click(function () {
-        vote('4');
+    $voteP.click(function () {
+        voteType('political');
     });
 
-    $vote5.click(function () {
-        vote('5');
-    }); */
+    $voteO.click(function () {
+        voteType('other');
+    });
 
     $skip.click(function () {
         vote(2);
@@ -216,6 +217,22 @@ function vote(voteOption) {
     $isOffensive.prop('checked', false);
 }
 
+function voteType(voteOption) {
+    
+    $.post('vote/hateType', {
+        tweetId: classifiedTweet.id,
+        hateType: voteOption,
+    }, function (tweet) {
+        classifiedTweet = tweet;
+    }, 'json');
+
+    $hatefulTweetModal.modal('hide');
+
+    $.mdtoast(toastText(voteOption), {duration: 3000});
+
+    //$votesAndToolbox.fadeOut();
+}
+
 function toastText(voteOption) {
     if (voteOption === '1') {
         return "Clasificado como odioso. ¡Gracias!";
@@ -223,15 +240,16 @@ function toastText(voteOption) {
         return "Clasificado como no odioso. ¡Gracias!";
     } else if (voteOption === '2') {
         return "Tweet salteado. ¡Gracias!";
-        /* return "Clasificado como "
-            + removeNonWords(voteCodeToText[Number(voteOption)]).toLowerCase()
-            + ". ¡Gracias!"; */
+    } else {
+        return "Clasificado como "
+            + removeNonWords(voteCodeToText[voteOption]).toLowerCase()
+            + ". ¡Gracias!";
     }
 }
 
-/* function removeNonWords(text) {
+function removeNonWords(text) {
     return text.replace(/[^\w\sáéíóúÁÉÍÓÚüÜñÑ]/g, "");
-} */
+}
 
 /* function moveToolboxIfOutside() {
     const x = $toolbox[0].getBoundingClientRect().x;
