@@ -81,7 +81,7 @@
         <div id="form-container">
           <p class="question">¿El tweet contiene discurso de odio?</p>
 
-          <ul class="answers">
+          <ul id="answers" class="answers">
             <!-- li id="humor-answer" class="answer">
               <div id="humor-container">
                 <button id="humor" type="button" class="btn btn-lg btn-default btn-answer">Sí</button>
@@ -105,7 +105,7 @@
             </li>
 
             <li class="answer">
-              <button id="skip" type="button" class="btn btn-lg btn-link btn-answer">Saltear</button>
+              <button type="button" class="btn btn-lg btn-link btn-answer btn-skip">Saltear</button>
             </li>
 
             <li class="answer">
@@ -113,6 +113,31 @@
                 <input id="is-offensive" type="checkbox" />
                 Ofensivo
               </label>
+            </li>
+          </ul>
+          <ul id="answers-subclass" class="answers">
+            <li id="homophobic-answer" class="answer">
+              <button id="homophobia" type="button" class="btn btn-lg btn-default btn-answer">Homofóbico</button>
+            </li>
+
+            <li id="racist-answer" class="answer">
+              <button id="racism" type="button" class="btn btn-lg btn-default btn-answer">Racista</button>
+            </li>
+
+            <li id="misogynistic-answer" class="answer">
+              <button id="misoginy" type="button" class="btn btn-lg btn-default btn-answer">Misógino</button>
+            </li>
+
+            <li id="political-answer" class="answer">
+              <button id="political" type="button" class="btn btn-lg btn-default btn-answer">Ideológico</button>
+            </li>
+
+            <li id="other-answer" class="answer">
+              <button id="other" type="button" class="btn btn-lg btn-default btn-answer">Otro</button>
+            </li>
+
+            <li class="answer">
+              <button type="button" class="btn btn-lg btn-link btn-answer btn-skip">Saltear</button>
             </li>
           </ul>
         </div>

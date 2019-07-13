@@ -4,7 +4,6 @@ let $star;
 let $homeContent;
 let $tweet;
 let $hatefulTweet;
-let $hatefulTweetModal;
 let $hate;
 /* let $votesAndToolbox;
 let $toolbox;
@@ -16,7 +15,8 @@ let $voteM;
 let $voteP;
 let $voteO;
 let $notHate;
-let $skip;
+let $skipHate;
+let $skipSubclass;
 let $isOffensive;
 
 // let legendsShownForFirstTime = false;
@@ -31,7 +31,7 @@ const voteCodeToText = {
 
 let tweets = [];
 let classifiedTweet = null;
-let index = 0;
+let classifiedAvailable = false;
 let voteCount = 0;
 
 $(document).ready(function () {
@@ -47,7 +47,6 @@ function setupElements() {
     $homeContent = $('#home-content');
     $tweet = $('#unk-tweet-text');
     $hatefulTweet = $('#hateful-tweet-text');
-    $hatefulTweetModal = $('#hate-modal');
     $hate = $('#hate');
     /* $votesAndToolbox = $('#votes,#toolbox');
     $toolbox = $('#toolbox');
@@ -59,31 +58,16 @@ function setupElements() {
     $voteP = $('#political');
     $voteO = $('#other');
     $notHate = $('#not-hate');
-    $skip = $('#skip');
+    $skipHate = $('#answers .btn-skip');
+    $skipSubclass = $('#answers-subclass .btn-skip');
     $isOffensive = $('#is-offensive');
 }
 
-function showTweet() {
-    if (tweets.length === 0 || tweets[index] === null) {
-        console.error("No hay tweets para mostrar.");
-    } else {
-        $tweet.fadeOut(200, function () {
-            $tweet.html(tweets[index].text.replace(/\n/mg, '<br/>'));
-            $tweet.fadeIn(200);
-        });
-    }
-}
-
-function showTweetModal() {
-    if (classifiedTweet !== null) {
-        $hatefulTweet.fadeOut(200, function () {
-            $hatefulTweet.html(classifiedTweet.text.replace(/\n/mg, '<br/>'));
-            $hatefulTweet.fadeIn(200);
-        });
-        $hatefulTweetModal.modal({
-            show: 'true'
-        });
-    }
+function showTweet(tweet) {
+    $tweet.fadeOut(200, function () {
+        $tweet.html(tweet.text.replace(/\n/mg, '<br/>'));
+        $tweet.fadeIn(200);
+    });
 }
 
 function setupPlaceload() {
@@ -107,17 +91,33 @@ function setupPlaceload() {
 
 function getRandomTweets() {
     $.getJSON('tweets/random', function (data) {
-        tweets = data;
-        showTweet();
+        if(data.length === 0) {
+            getClassifiedTweet(() => {
+                if(classifiedAvailable)
+                    changeMode('subclass');
+                else
+                    changeMode('end');
+            });
+        }
+        else {
+            tweets = data;
+            changeMode('hate');
+        }
     });
 }
 
-function getClassifiedTweet() {
+function getClassifiedTweet(callback) {
     $.getJSON('tweets/classified/random', function (data) {
+        console.log(data);
         if(!$.isEmptyObject(data)) {
             classifiedTweet = data;
-            showTweetModal();
+            classifiedAvailable = true;
         }
+        else {
+            classifiedAvailable = false;
+        }
+        if(typeof callback !== 'undefined')
+            callback();
     });
 }
 
@@ -177,8 +177,12 @@ function setUiListeners() {
         voteType('other');
     });
 
-    $skip.click(function () {
+    $skipHate.click(function () {
         vote('2', true);
+    });
+
+    $skipSubclass.click(function () {
+        voteType('skip');
     });
 
     $('button').mouseup(function () {
@@ -186,30 +190,76 @@ function setUiListeners() {
     });
 }
 
+function changeMode(mode) {
+    if(mode === 'hate') {
+        $('#answers-subclass').fadeOut(200, () => {
+            $('#answers-subclass').css("display", "flex").hide();
+            $('#answers').fadeIn(200);
+        });
+        $('.question').fadeOut(200, () => {
+            $('.question').text("¿El tweet contiene discurso de odio?");
+            $('.question').fadeIn(200);
+        });
+        showTweet(tweets[0]);
+    }
+    else if(mode === 'subclass') {
+        $('#answers').fadeOut(200, () => {
+            $('#answers-subclass').css("display", "flex").hide();
+            $('#answers-subclass').fadeIn(200);
+        });
+        $('.question').fadeOut(200, () => {
+            $('.question').text("¡Ya clasificaste este Tweet! ¿Podés identificar que tipo de discurso de odio contiene?");
+            $('.question').fadeIn(200);
+        });
+        showTweet(classifiedTweet);
+    }
+    else if(mode === 'end') {
+        $('#answers').fadeOut(200);
+        $('#answers-subclass').fadeOut(200);
+        $('.question').fadeOut(200);
+        showTweet({text: 'Wow! Clasificaste todos los tweets <br />Gracias por tu ayuda!'});
+    }
+}
+
 function vote(voteOption, skip=false) {
-    const oldIndex = index;
-    index = (index + 1) % tweets.length;
-
-    const otherIndex = (index + 1) % tweets.length;
-
+    const currentTweet = tweets.shift();
+    
+    if(tweets.length > 0 && !classifiedAvailable) {
+        showTweet(tweets[0]);
+    } else if(voteCount >= 1 && classifiedAvailable) {
+        changeMode('subclass');
+    }
+    
     $.post('vote', {
-        tweetId: tweets[oldIndex].id,
+        tweetId: currentTweet.id,
         isHateful: voteOption,
         skip,
-        ignoreTweetIds: [tweets[index] ? tweets[index].id : '', tweets[otherIndex] ? tweets[otherIndex].id : ''],
+        ignoreTweetIds: [tweets.length > 0 ? tweets[0].id : '', tweets.length > 1 ? tweets[1].id : ''],
         isOffensive: ($isOffensive.prop('checked') == true) ? '1' : '0',
-    }, function (tweet) {
-        tweets[oldIndex] = $.isEmptyObject(tweet) ? null : tweet;
+    }, function (tweet) {        
+        if(!$.isEmptyObject(tweet))
+            tweets.push(tweet);
 
-        if (voteCount == 2) {
-            getClassifiedTweet();
-            voteCount = 0;
-        } else {
+        if(!skip)
             voteCount++;
-        }
-    }, 'json');
 
-    showTweet();
+        if(tweets.length === 0 && !classifiedAvailable) {            
+            getClassifiedTweet(() => {
+                if(classifiedAvailable)
+                    changeMode('subclass');
+                else
+                    changeMode('end');
+            });
+        }
+        else if(voteCount >= 2) {
+            if(classifiedAvailable)
+                voteCount = 0;
+            else
+                getClassifiedTweet();
+        }
+        
+        
+    }, 'json');
 
     $.mdtoast(toastText(voteOption), {duration: 3000});
 
@@ -218,14 +268,24 @@ function vote(voteOption, skip=false) {
 
 function voteType(voteOption) {
     
+    if(tweets.length > 0) {
+        classifiedAvailable = false;
+        changeMode('hate');
+    }
+    
     $.post('vote/hateType', {
         tweetId: classifiedTweet.id,
+        skip: voteOption === 'skip',
         hateType: voteOption,
     }, function (tweet) {
-        classifiedTweet = tweet;
+        if(tweets.length === 0) {
+            if(!$.isEmptyObject(tweet)) {
+                classifiedTweet = tweet;
+                showTweet(classifiedTweet);
+            } else
+                changeMode('end');
+        }
     }, 'json');
-
-    $hatefulTweetModal.modal('hide');
 
     $.mdtoast(toastText(voteOption), {duration: 3000});
 }
@@ -235,7 +295,7 @@ function toastText(voteOption) {
         return "Clasificado como odioso. ¡Gracias!";
     } else if (voteOption === '0') {
         return "Clasificado como no odioso. ¡Gracias!";
-    } else if (voteOption === '2') {
+    } else if (voteOption === '2' || voteOption === 'skip') {
         return "Tweet salteado. ¡Gracias!";
     } else {
         return "Clasificado como "
