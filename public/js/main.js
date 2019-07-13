@@ -30,7 +30,7 @@ const voteCodeToText = {
 };
 
 let tweets = [];
-let classifiedTweet = {};
+let classifiedTweet = null;
 let index = 0;
 let voteCount = 0;
 
@@ -64,7 +64,7 @@ function setupElements() {
 }
 
 function showTweet() {
-    if (tweets.length === 0) {
+    if (tweets.length === 0 || tweets[index] === null) {
         console.error("No hay tweets para mostrar.");
     } else {
         $tweet.fadeOut(200, function () {
@@ -75,9 +75,7 @@ function showTweet() {
 }
 
 function showTweetModal() {
-    if (classifiedTweet.length === 0) {
-        showTweet();
-    } else {
+    if (classifiedTweet !== null) {
         $hatefulTweet.fadeOut(200, function () {
             $hatefulTweet.html(classifiedTweet.text.replace(/\n/mg, '<br/>'));
             $hatefulTweet.fadeIn(200);
@@ -85,7 +83,6 @@ function showTweetModal() {
         $hatefulTweetModal.modal({
             show: 'true'
         });
-        showTweet();
     }
 }
 
@@ -117,8 +114,10 @@ function getRandomTweets() {
 
 function getClassifiedTweet() {
     $.getJSON('tweets/classified/random', function (data) {
-        classifiedTweet = data;
-        showTweetModal();
+        if(!$.isEmptyObject(data)) {
+            classifiedTweet = data;
+            showTweetModal();
+        }
     });
 }
 
@@ -197,19 +196,20 @@ function vote(voteOption, skip=false) {
         tweetId: tweets[oldIndex].id,
         isHateful: voteOption,
         skip,
-        ignore_tweet_ids: [tweets[index].id, tweets[otherIndex].id],
+        ignoreTweetIds: [tweets[index] ? tweets[index].id : '', tweets[otherIndex] ? tweets[otherIndex].id : ''],
         isOffensive: ($isOffensive.prop('checked') == true) ? '1' : '0',
     }, function (tweet) {
-        tweets[oldIndex] = tweet;
+        tweets[oldIndex] = $.isEmptyObject(tweet) ? null : tweet;
+
+        if (voteCount == 2) {
+            getClassifiedTweet();
+            voteCount = 0;
+        } else {
+            voteCount++;
+        }
     }, 'json');
 
-    if (voteCount == 2) {
-        getClassifiedTweet();
-        voteCount = 0;
-    } else {
-        showTweet();
-        voteCount++;
-    }
+    showTweet();
 
     $.mdtoast(toastText(voteOption), {duration: 3000});
 

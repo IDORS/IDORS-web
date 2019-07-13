@@ -17,9 +17,10 @@ router.get('/tweets/random', async function(req, res, next) {
             excluded = excluded.concat(req.session.skippedTweets);
         
         let tweets = await tweetsModel.getRandomNotDone(3, excluded);
-        if(tweets.length === 0) {
+        if(tweets.length === 0 && req.session.skippedTweets && req.session.skippedTweets.length > 0) {
+            debug("Reseted skips");
             req.session.skippedTweets = []
-            tweets = await tweetsModel.getRandomNotDone(3, req.session.votedTweets);
+            tweets = await tweetsModel.getRandomNotDone(3, req.session.votedTweets || []);
         }
         debug('Excluded:', excluded);
         debug('Selected:', tweets);
@@ -36,9 +37,12 @@ router.get('/tweets/classified/random', async function(req, res, next) {
         next();
     
     try {
-        const tweet = await tweetsModel.getRandomClassified(1);
+        const tweet = await tweetsModel.getRandomClassified(1, req.session.subclassified || []);
         debug('Selected:', tweet);
-        res.send(tweet[0]);
+        
+        const result = tweet.length === 0 ? {} : tweet[0];
+        debug(result);
+        res.send(result);
     } catch(error) {
         next(error);
     }
@@ -70,9 +74,28 @@ router.post('/vote', async function(req, res, next) {
             req.session[votedOrSkipped] = [tweetId];
         }
 
-        const tweets = await tweetsModel.getRandomNotDone(1);
+        let excluded = req.body['ignoreTweetIds[]'];
+        if(req.session.votedTweets)
+            excluded = excluded.concat(req.session.votedTweets);
+        if(req.session.skippedTweets)
+            excluded = excluded.concat(req.session.skippedTweets);
 
-        res.send(tweets[0]);
+        let tweets = await tweetsModel.getRandomNotDone(1, excluded);
+        if(tweets.length === 0 && req.session.skippedTweets && req.session.skippedTweets.length > 0) {
+            debug("Reseted skips");
+            req.session.skippedTweets = []
+            excluded = req.body['ignoreTweetIds[]'];
+            if(req.session.votedTweets)
+                excluded.concat(req.session.votedTweets)
+            tweets = await tweetsModel.getRandomNotDone(1, excluded);
+        }
+        debug(tweets);
+        debug("ignoreTweetIds : ", req.body['ignoreTweetIds[]']);
+        debug("votedTweets: ", req.session.votedTweets);
+        debug("skippedTweets: ", req.session.skippedTweets);
+
+        const result = tweets.length === 0 ? {} : tweets[0];
+        res.send(result);
     } catch(error) {
         next(error);
     }
@@ -84,11 +107,16 @@ router.post('/vote/hateType', async function(req, res, next) {
 
         const {tweetId, hateType} = req.body;
 
-        /* if (typeof tweetId !== 'string' || typeof isOffensive !== 'boolean' || typeof isHateful !== 'number')
-            throw Error('Invalid input'); */
-
         await tweetsModel.saveHateTypeVote(tweetId, hateType);
         debug('Inserted correctly');
+
+        if(req.session.subclassified) {
+            const subclassifiedSet = new Set(req.session.subclassified);
+            subclassifiedSet.add(tweetId);
+            req.session.subclassified = [...subclassifiedSet]
+        } else {
+            req.session.subclassified = [tweetId];
+        }
 
         const tweets = tweetsModel.getRandomClassified(1);
 

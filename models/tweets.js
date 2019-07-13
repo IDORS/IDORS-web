@@ -13,25 +13,30 @@ exports.getRandom = async function(limit) {
 }
 
 exports.getRandomNotDone = async function(limit, tweetsSeen) {
-    if(!tweetsSeen || tweetsSeen.length === 0)
-        tweetsSeen = ""
-
-    const [tweets] = await db.query(`SELECT tweets.id, user, text
+   /*  const query = db.format(`SELECT tweets.id, user, text
+    FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
+    WHERE FIND_IN_SET(tweets.id, ?) = 0
+    GROUP BY tweets.id
+    HAVING COUNT(votesIsHateful.id) < 5
+    ORDER BY COUNT(votesIsHateful.id), RAND()
+    LIMIT ?`, [tweetsSeen.join(","),limit]);
+    console.log(query); */
+        const [tweets] = await db.query(`SELECT tweets.id, user, text
                                     FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
-                                    WHERE FIND_IN_SET(tweets.id, "?") = 0
+                                    WHERE FIND_IN_SET(tweets.id, ?) = 0
                                     GROUP BY tweets.id
                                     HAVING COUNT(votesIsHateful.id) < 5
                                     ORDER BY COUNT(votesIsHateful.id), RAND()
-                                    LIMIT ?`, [tweetsSeen,limit]);
+                                    LIMIT ?`, [tweetsSeen.join(","), limit]);
     return tweets;
 }
 
-exports.getRandomClassified = async function(limit) {
+exports.getRandomClassified = async function(limit, tweetsSubclassified) {
     const [tweets] = await db.query(`SELECT tweets.id, user, text
                                     FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
-                                    WHERE votesIsHateful.is_hateful = 1
+                                    WHERE votesIsHateful.is_hateful = 1 AND FIND_IN_SET(tweets.id, ?) = 0
                                     ORDER BY RAND()
-                                    LIMIT ?`, [limit]);
+                                    LIMIT ?`, [tweetsSubclassified.join(","), limit]);
     return tweets;
 }
 
