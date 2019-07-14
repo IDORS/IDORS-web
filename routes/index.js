@@ -52,6 +52,8 @@ router.post('/vote', async function(req, res, next) {
         if (skip === 'true') {
             await tweetsModel.skipTweet(tweetId);
             req.session.skipped = addToOrCreateList(req.session.skipped, tweetId);
+            if(req.session.skipped.length > 10)
+                req.session.skipped.shift();
         } else if (skip === 'false'){
             await tweetsModel.saveVote(tweetId, isHateful, isOffensive);
             debug('Inserted correctly');
@@ -104,9 +106,9 @@ router.post('/vote/hateType', async function(req, res, next) {
 
 function addToOrCreateList(possibleList, tweetId) {
     if(possibleList) {
-        const setFromList = new Set(possibleList);
-        setFromList.add(tweetId);
-        return [...setFromList];
+        if(!possibleList.includes(tweetId))
+            possibleList.push(tweetId);
+        return possibleList;
     } else {
         return [tweetId];
     }
