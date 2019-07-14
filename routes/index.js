@@ -15,9 +15,8 @@ router.get('/tweets/random', async function(req, res, next) {
         
         let tweets = await tweetsModel.getRandomNotDone(3, excludedFull);
         if(tweets.length === 0 && req.session.skipped && req.session.skipped.length > 0) {
-            debug("Reseted skips");
-            req.session.skipped = []
-            tweets = await tweetsModel.getRandomNotDone(3, excludedWithoutSkipped);
+            const firstThree = req.session.skipped.splice(0,3);
+            tweets = await tweetsModel.getAll(firstThree);
         }
         debug('Excluded:', excludedFull);
         debug('Selected:', tweets);
@@ -65,12 +64,11 @@ router.post('/vote', async function(req, res, next) {
         const excludedFull = req.session.skipped ? excludedWithoutSkipped.concat(req.session.skipped) : excludedWithoutSkipped;
 
         let tweets = await tweetsModel.getRandomNotDone(1, excludedFull);
-        if(tweets.length === 0 && req.session.skipped && req.session.skipped.length > 0) {
-            debug("Reseted skips");
-            req.session.skipped = []
-            tweets = await tweetsModel.getRandomNotDone(1, excludedWithoutSkipped);
-        }
         debug(tweets);
+        if(tweets.length === 0 && req.session.skipped && req.session.skipped.length > 0) {
+            const first = req.session.skipped.shift();
+            tweets = await tweetsModel.getAll([first]);
+        }
 
         const result = tweets.length === 0 ? {} : tweets[0];
         res.send(result);

@@ -1,8 +1,16 @@
 const db = require("../db/connection");
 
-exports.getAll = async function() {
-    const [tweets] = await db.query(`SELECT * FROM tweets`);
-    return tweets;
+exports.getAll = async function(ids) {
+    let result;
+    if(ids) {
+        result = await db.query(`SELECT tweets.id, user, text
+                                FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
+                                WHERE tweets.id IN ?
+                                LIMIT ?`, [[ids], ids.length]);
+    }
+    
+    result = await db.query(`SELECT * FROM tweets`);
+    return result[0];
 }
 
 exports.getRandom = async function(limit) {
@@ -13,21 +21,13 @@ exports.getRandom = async function(limit) {
 }
 
 exports.getRandomNotDone = async function(limit, tweetsSeen) {
-   /*  const query = db.format(`SELECT tweets.id, user, text
-    FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
-    WHERE FIND_IN_SET(tweets.id, ?) = 0
-    GROUP BY tweets.id
-    HAVING COUNT(votesIsHateful.id) < 5
-    ORDER BY COUNT(votesIsHateful.id), RAND()
-    LIMIT ?`, [tweetsSeen.join(","),limit]);
-    console.log(query); */
-        const [tweets] = await db.query(`SELECT tweets.id, user, text
-                                    FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
-                                    WHERE FIND_IN_SET(tweets.id, ?) = 0
-                                    GROUP BY tweets.id
-                                    HAVING COUNT(votesIsHateful.id) < 5
-                                    ORDER BY COUNT(votesIsHateful.id), RAND()
-                                    LIMIT ?`, [tweetsSeen.join(","), limit]);
+    const [tweets] = await db.query(`SELECT tweets.id, user, text
+                                FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
+                                WHERE FIND_IN_SET(tweets.id, ?) = 0
+                                GROUP BY tweets.id
+                                HAVING COUNT(votesIsHateful.id) < 5
+                                ORDER BY COUNT(votesIsHateful.id), RAND()
+                                LIMIT ?`, [tweetsSeen.join(","), limit]);
     return tweets;
 }
 
