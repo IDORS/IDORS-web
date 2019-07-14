@@ -28,5 +28,3 @@ CREATE TABLE IF NOT EXISTS `pgodio`.`votesHateType` (
   INDEX `tweet_id_idx` (`tweet_id` ASC),
   FOREIGN KEY (`tweet_id`) REFERENCES `pgodio`.`tweets` (`id`) ON DELETE CASCADE
 );
-
-/* TODO: how would we associate the vote to the user when retrieving already voted tweets? */
