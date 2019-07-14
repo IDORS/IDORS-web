@@ -108,7 +108,6 @@ function getRandomTweets() {
 
 function getClassifiedTweet(callback) {
     $.getJSON('tweets/classified/random', function (data) {
-        console.log(data);
         if(!$.isEmptyObject(data)) {
             classifiedTweet = data;
             classifiedAvailable = true;
