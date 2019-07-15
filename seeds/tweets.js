@@ -37,7 +37,10 @@ const createRecord = (knex, data) => {
           .whereNotExists(
             knex('tweets')
               .select('*')
-              .where('id', data.id));
+              .where('id', data.id))
+          .catch(() => {
+            console.log(data.id);
+          });
 };
 
 exports.seed = function(knex) {
