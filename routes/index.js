@@ -83,10 +83,10 @@ router.post('/vote/hateType', async function(req, res, next) {
     try {
         debug(req.body.tweetId, req.body.hateType);
 
-        const {tweetId, hateType, skip} = req.body;
+        const {tweetId, hateType, skip, other} = req.body;
 
         if (skip === 'false'){
-            await tweetsModel.saveHateTypeVote(tweetId, hateType);
+            await tweetsModel.saveHateTypeVote(tweetId, hateType, other);
             debug('Inserted correctly');
 
             req.session.subclassified = addToOrCreateList(req.session.subclassified, tweetId);

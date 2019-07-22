@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `pgodio`.`votesHateType` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `hate_type` ENUM('misoginy', 'other', 'homophobia', 'racism', 'political') NOT NULL,
   `tweet_id` VARCHAR(21) NOT NULL,
+  `other` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `tweet_id_idx` (`tweet_id` ASC),
   FOREIGN KEY (`tweet_id`) REFERENCES `pgodio`.`tweets` (`id`) ON DELETE CASCADE

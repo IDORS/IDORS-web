@@ -51,7 +51,7 @@ exports.saveVote = async function(tweetId, isHateful, isOffensive) {
                             VALUES (?, ?, ?)`, [isHateful, isOffensive, tweetId])
 }
 
-exports.saveHateTypeVote = async function(tweetId, hateType) {
-    return await db.query(`INSERT INTO votesHateType (hate_type, tweet_id)
-                            VALUES (?, ?)`, [hateType, tweetId])
+exports.saveHateTypeVote = async function(tweetId, hateType, other) {
+    return await db.query(`INSERT INTO votesHateType (hate_type, tweet_id, other)
+                            VALUES (?, ?, ?)`, [hateType, tweetId, other])
 }

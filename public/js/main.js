@@ -276,6 +276,7 @@ function voteType(voteOption) {
         tweetId: classifiedTweet.id,
         skip: voteOption === 'skip',
         hateType: voteOption,
+        other: voteOption === 'other' ? $('#other-input').val() : ''
     }, function (tweet) {
         if(tweets.length === 0) {
             if(!$.isEmptyObject(tweet)) {
@@ -285,6 +286,8 @@ function voteType(voteOption) {
                 changeMode('end');
         }
     }, 'json');
+
+    $('#other-input').val('');
 
     $.mdtoast(toastText(voteOption), {duration: 3000});
 }
