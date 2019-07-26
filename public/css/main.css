@@ -68,7 +68,7 @@ h2 {
 .answers {
   display: none;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
   list-style-type: none;
   padding: 0;
 }
@@ -183,6 +183,10 @@ footer {
   vertical-align: bottom;
 }
 
-.input-otro {
+.input-other {
   height: 52px;
+}
+
+.li-other {
+  display: table;
 }
