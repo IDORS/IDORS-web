@@ -26,7 +26,7 @@ exports.getRandomNotDone = async function(limit, tweetsSeen) {
                                 WHERE FIND_IN_SET(tweets.id, ?) = 0
                                 GROUP BY tweets.id
                                 HAVING COUNT(votesIsHateful.id) < 5
-                                ORDER BY COUNT(votesIsHateful.id), RAND()
+                                ORDER BY COUNT(votesIsHateful.id) DESC, RAND()
                                 LIMIT ?`, [tweetsSeen.join(","), limit]);
     return tweets;
 }
