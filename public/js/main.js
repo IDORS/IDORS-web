@@ -196,7 +196,7 @@ function changeMode(mode) {
             $('#answers').fadeIn(200);
         });
         $('.question').fadeOut(200, () => {
-            $('.question').text("¿El tweet contiene discurso de odio?");
+            $('.question').text("¿El tweet profesa discurso de odio?");
             $('.question').fadeIn(200);
         });
         showTweet(tweets[0]);
