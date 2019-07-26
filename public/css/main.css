@@ -183,10 +183,11 @@ footer {
   vertical-align: bottom;
 }
 
-.input-other {
+#other-input {
   height: 52px;
+  width: auto;
 }
 
-.li-other {
-  display: table;
+.button-other {
+  height: 52px
 }
