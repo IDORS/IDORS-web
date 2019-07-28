@@ -20,23 +20,23 @@ exports.getRandom = async function(limit) {
     return tweets;
 }
 
-exports.getRandomNotDone = async function(limit, tweetsSeen) {
+exports.getRandomNotDone = async function(limit, session_id, excluded = []) {
     const [tweets] = await db.query(`SELECT tweets.id, user, text
                                 FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
-                                WHERE FIND_IN_SET(tweets.id, ?) = 0
+                                WHERE (session_id IS NULL OR session_id <> ?) AND FIND_IN_SET(tweets.id, ?) = 0
                                 GROUP BY tweets.id
                                 HAVING COUNT(votesIsHateful.id) < 5
                                 ORDER BY COUNT(votesIsHateful.id) DESC, RAND()
-                                LIMIT ?`, [tweetsSeen.join(","), limit]);
+                                LIMIT ?`, [session_id, excluded.join(','), limit]);
     return tweets;
 }
 
-exports.getRandomClassified = async function(limit, tweetsSubclassified) {
+exports.getRandomClassified = async function(limit, session_id) {
     const [tweets] = await db.query(`SELECT tweets.id, user, text
-                                    FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
-                                    WHERE votesIsHateful.is_hateful = 1 AND FIND_IN_SET(tweets.id, ?) = 0
+                                    FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id LEFT JOIN votesHateType ON votesHateType.tweet_id = tweets.id
+                                    WHERE votesIsHateful.is_hateful = 1 AND votesIsHateful.session_id = ? AND votesHateType.id IS NULL
                                     ORDER BY RAND()
-                                    LIMIT ?`, [tweetsSubclassified.join(","), limit]);
+                                    LIMIT ?`, [session_id, limit]);
     return tweets;
 }
 
@@ -46,12 +46,12 @@ exports.skipTweet = async function(tweetId) {
                            WHERE tweets.id = ? `, [tweetId]);
 }
 
-exports.saveVote = async function(tweetId, isHateful, isOffensive) {
-    return await db.query(`INSERT INTO votesIsHateful (is_hateful, is_offensive, tweet_id)
-                            VALUES (?, ?, ?)`, [isHateful, isOffensive, tweetId])
+exports.saveVote = async function(tweetId, isHateful, isOffensive, session_id) {
+    return await db.query(`INSERT INTO votesIsHateful (is_hateful, is_offensive, tweet_id, session_id)
+                            VALUES (?, ?, ?, ?)`, [isHateful, isOffensive, tweetId, session_id])
 }
 
-exports.saveHateTypeVote = async function(tweetId, hateType, other) {
-    return await db.query(`INSERT INTO votesHateType (hate_type, tweet_id, other)
-                            VALUES (?, ?, ?)`, [hateType, tweetId, other])
+exports.saveHateTypeVote = async function(tweetId, hateType, other, session_id) {
+    return await db.query(`INSERT INTO votesHateType (hate_type, tweet_id, other, session_id)
+                            VALUES (?, ?, ?, ?)`, [hateType, tweetId, other, session_id])
 }
