@@ -7,6 +7,8 @@ exports.getAll = async function(ids) {
                                 FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
                                 WHERE tweets.id IN ?
                                 LIMIT ?`, [[ids], ids.length]);
+
+        return result[0];
     }
     
     result = await db.query(`SELECT * FROM tweets`);
