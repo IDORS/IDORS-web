@@ -23,13 +23,13 @@ exports.getRandom = async function(limit) {
 }
 
 exports.getRandomNotDone = async function(limit, session_id, excluded = []) {
-    const [tweets] = await db.query(`SELECT tweets.id, user, text
-                                FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
-                                WHERE (session_id IS NULL OR session_id <> ?) AND FIND_IN_SET(tweets.id, ?) = 0
-                                GROUP BY tweets.id
-                                HAVING COUNT(votesIsHateful.id) < 5
-                                ORDER BY COUNT(votesIsHateful.id) DESC, RAND()
-                                LIMIT ?`, [session_id, excluded.join(','), limit]);
+    const [tweets] = await db.query(`SELECT t.id, user, text
+                                    FROM tweets t LEFT JOIN (SELECT * FROM votesIsHateful WHERE session_id = ?) a ON a.tweet_id = t.id
+                                    WHERE a.session_id IS NULL AND find_in_set(t.id, ?) = 0 AND (t.id IN (SELECT tweet_id FROM votesIsHateful b
+                                                                                                            GROUP BY b.tweet_id
+                                                                                                            HAVING COUNT(*) < 5)
+                                                                                                OR t.id NOT IN (SELECT tweet_id FROM votesIsHateful))
+                                    LIMIT ?`, [session_id, excluded.join(','), limit]);
     return tweets;
 }
 
