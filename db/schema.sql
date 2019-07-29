@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `pgodio`.`votesHateType` (
   `hate_type` ENUM('misoginy', 'other', 'homophobia', 'racism', 'political') NOT NULL,
   `tweet_id` VARCHAR(21) NOT NULL,
   `session_id`  VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `other` VARCHAR(45) NOT NULL,
+  `other` VARCHAR(45) DEFAULT '',
   PRIMARY KEY (`id`),
   INDEX `tweet_id_idx` (`tweet_id` ASC),
   FOREIGN KEY (`tweet_id`) REFERENCES `pgodio`.`tweets` (`id`) ON DELETE CASCADE,
