@@ -36,7 +36,7 @@ exports.getRandomNotDone = async function(limit, session_id, excluded = []) {
 exports.getRandomClassified = async function(limit, session_id) {
     const [tweets] = await db.query(`SELECT tweets.id, tweets.user, tweets.text
                                     FROM tweets LEFT JOIN votesIsHateful ON votesIsHateful.tweet_id = tweets.id
-                                                LEFT JOIN votesHatetype h ON tweets.id = h.tweet_id AND h.session_id = votesIsHateful.session_id
+                                                LEFT JOIN votesHateType h ON tweets.id = h.tweet_id AND h.session_id = votesIsHateful.session_id
                                     WHERE votesIsHateful.is_hateful = 1 AND votesIsHateful.session_id = ? AND h.id IS NULL
                                     ORDER BY RAND()
                                     LIMIT ?`, [session_id, limit]);
