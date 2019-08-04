@@ -10,15 +10,20 @@ router.get('/tweets/random', async function(req, res, next) {
         next();
     
     try {
-        const excludedWithoutSkipped = req.session.voted || [];
-        const excludedFull = req.session.skipped ? excludedWithoutSkipped.concat(req.session.skipped) : excludedWithoutSkipped;
+        let excluded;
+        if(req.session.skipped)
+            excluded = req.session.skipped;
+        else {
+            excluded = [];
+            req.session.skipped = [];
+        }
         
-        let tweets = await tweetsModel.getRandomNotDone(3, excludedFull);
+        let tweets = await tweetsModel.getRandomNotDone(3, req.session.id, excluded);
         if(tweets.length === 0 && req.session.skipped && req.session.skipped.length > 0) {
             const firstThree = req.session.skipped.splice(0,3);
             tweets = await tweetsModel.getAll(firstThree);
         }
-        debug('Excluded:', excludedFull);
+        debug('Excluded:', excluded);
         debug('Selected:', tweets);
         
         res.send(tweets);
@@ -33,7 +38,7 @@ router.get('/tweets/classified/random', async function(req, res, next) {
         next();
     
     try {
-        const tweet = await tweetsModel.getRandomClassified(1, req.session.subclassified || []);
+        const tweet = await tweetsModel.getRandomClassified(1, req.session.id);
         debug('Selected:', tweet);
         
         const result = tweet.length === 0 ? {} : tweet[0];
@@ -55,21 +60,20 @@ router.post('/vote', async function(req, res, next) {
             if(req.session.skipped.length > 10)
                 req.session.skipped.shift();
         } else if (skip === 'false'){
-            await tweetsModel.saveVote(tweetId, isHateful, isOffensive);
+            await tweetsModel.saveVote(tweetId, isHateful, isOffensive, req.session.id);
             debug('Inserted correctly');
-            req.session.voted = addToOrCreateList(req.session.voted, tweetId);
         } else {
             throw new Error('Skip value is invalid.')
         }
 
-        const excludedWithoutSkipped = req.session.voted ? req.body['ignoreTweetIds[]'].concat(req.session.voted): req.body['ignoreTweetIds[]'];        
-        const excludedFull = req.session.skipped ? excludedWithoutSkipped.concat(req.session.skipped) : excludedWithoutSkipped;
+        const excluded = req.session.skipped ? req.body['ignoreTweetIds[]'].concat(req.session.skipped) : req.body['ignoreTweetIds[]'];
 
-        let tweets = await tweetsModel.getRandomNotDone(1, excludedFull);
-        debug(tweets);
+        let tweets = await tweetsModel.getRandomNotDone(1, req.session.id, excluded);
+        debug("con excluded", tweets);
         if(tweets.length === 0 && req.session.skipped && req.session.skipped.length > 0) {
             const first = req.session.skipped.shift();
             tweets = await tweetsModel.getAll([first]);
+            debug("first", tweets);
         }
 
         const result = tweets.length === 0 ? {} : tweets[0];
@@ -83,18 +87,16 @@ router.post('/vote/hateType', async function(req, res, next) {
     try {
         debug(req.body.tweetId, req.body.hateType);
 
-        const {tweetId, hateType, skip} = req.body;
+        const {tweetId, hateType, skip, other} = req.body;
 
         if (skip === 'false'){
-            await tweetsModel.saveHateTypeVote(tweetId, hateType);
+            await tweetsModel.saveHateTypeVote(tweetId, hateType, other, req.session.id);
             debug('Inserted correctly');
-
-            req.session.subclassified = addToOrCreateList(req.session.subclassified, tweetId);
         } else if(skip !== 'true') {
             throw new Error('Skip value is invalid.')
         }
 
-        const tweet = await tweetsModel.getRandomClassified(1, req.session.subclassified || []);
+        const tweet = await tweetsModel.getRandomClassified(1, req.session.id);
 
         const result = tweet.length === 0 ? {} : tweet[0];
         debug(tweet);

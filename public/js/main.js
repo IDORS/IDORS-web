@@ -196,7 +196,7 @@ function changeMode(mode) {
             $('#answers').fadeIn(200);
         });
         $('.question').fadeOut(200, () => {
-            $('.question').text("¿El tweet contiene discurso de odio?");
+            $('.question').html("¿El tweet profesa <a href=\"https://es.wikipedia.org/wiki/Discurso_de_odio\" target=\"_blank\">discurso de odio</a>?");
             $('.question').fadeIn(200);
         });
         showTweet(tweets[0]);
@@ -276,6 +276,7 @@ function voteType(voteOption) {
         tweetId: classifiedTweet.id,
         skip: voteOption === 'skip',
         hateType: voteOption,
+        other: voteOption === 'other' ? $('#other-input').val() : ''
     }, function (tweet) {
         if(tweets.length === 0) {
             if(!$.isEmptyObject(tweet)) {
@@ -285,6 +286,8 @@ function voteType(voteOption) {
                 changeMode('end');
         }
     }, 'json');
+
+    $('#other-input').val('');
 
     $.mdtoast(toastText(voteOption), {duration: 3000});
 }

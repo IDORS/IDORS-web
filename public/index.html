@@ -6,25 +6,25 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description"
-    content="Ayudá a clasificar tweets como humorísticos o no humorísticos, y si lo son, decí qué tan graciosos son. El objetivo es armar un conjunto de datos para investigar sobre Humor Computacional.">
-  <meta name="author" content="Santiago Castro, Matías Cubero y el Grupo PLN, UdelaR">
+    content="Ayudá a clasificar tweets indicando si contienen discurso de odio. El objetivo es armar un conjunto de datos para investigar sobre Reconocimiento y detección de discurso de odio.">
+  <meta name="author" content="Manuel Saravia, Lucas Kunc, basado en el trabajo de Santiago Castro y Matías Cubero">
   <link rel="apple-touch-icon" href="img/favicon.png">
 
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Clasificá tweets y divertite" />
-  <meta property="og:image" content="https://clasificahumor.com/img/og.png" />
+  <meta property="og:site_name" content="¿Reconocés el odio?" />
+  <meta property="og:image" content="img/og.png" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:width" content="1200" />
-  <meta property="og:title" content="Clasificá tweets y divertite" />
+  <meta property="og:title" content="¿Reconocés el odio?" />
   <meta property="og:description"
-    content="Ayudá a clasificar tweets como humorísticos o no humorísticos, y si lo son, decí qué tan graciosos son. El objetivo es armar un conjunto de datos para investigar sobre Humor Computacional." />
+    content="Ayudá a clasificar tweets indicando si contienen discurso de odio. El objetivo es armar un conjunto de datos para investigar sobre Reconocimiento y detección de discurso de odio."" />
   <meta property="og:url" content="https://clasificaodio.com/" />
   <meta property="fb:app_id" content="2351915184888208" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@PLN_UdelaR" />
   <meta name="twitter:creator" content="@PLN_UdelaR" />
 
-  <title>Clasificá tweets y divertite</title>
+  <title>¿Reconocés el odio?</title>
 
   <link href="css/normalize.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -33,6 +33,16 @@
   <link href="css/emoji.css" rel="stylesheet" />
   <link href="css/votes.css" rel="stylesheet" />
   <link href="css/main.css" rel="stylesheet" />
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145090380-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145090380-1');
+  </script>
+
 </head>
 
 <body>
@@ -76,7 +86,7 @@
   <div class="main-content">
     <div class="container">
       <div id="home-content" class="content">
-        <h1>Clasificá tweets y divertite</h1>
+        <h1>¿Reconocés el odio?</h1>
 
         <div class="tweet" id="unk-tweet">
           <p class="tweet-text" id="unk-tweet-text"></p>
@@ -84,7 +94,7 @@
         </div>
 
         <div id="form-container">
-          <p class="question">¿El tweet contiene discurso de odio?</p>
+          <p class="question">¿El tweet profesa <a href="https://es.wikipedia.org/wiki/Discurso_de_odio" target="_blank">discurso de odio</a>?</p>
 
           <ul id="answers" class="answers">
             <li id="hate-answer" class="answer">
@@ -95,36 +105,47 @@
               <button id="not-hate" type="button" class="btn btn-lg btn-default btn-answer">No</button>
             </li>
 
-            <li class="answer">
-              <button type="button" class="btn btn-lg btn-link btn-answer btn-skip">Saltear</button>
-            </li>
-
-            <li class="answer">
+            <li class="answer is-offensive-li">
               <label id="is-offensive-label" for="is-offensive">
                 <input id="is-offensive" type="checkbox" />
                 Ofensivo
               </label>
             </li>
+
+            <li class="answer">
+              <button type="button" class="btn btn-lg btn-link btn-answer btn-skip">Saltear</button>
+            </li>
           </ul>
           <ul id="answers-subclass" class="answers">
             <li id="homophobic-answer" class="answer">
-              <button id="homophobia" type="button" class="btn btn-lg btn-default btn-answer">Homofóbico</button>
+              <button id="homophobia" type="button" class="btn btn-default btn-answer">
+                <img src="img/homophobia.png" height="40" /> Homofóbico
+              </button>
             </li>
 
             <li id="racist-answer" class="answer">
-              <button id="racism" type="button" class="btn btn-lg btn-default btn-answer">Racista</button>
+              <button id="racism" type="button" class="btn btn-default btn-answer">
+                <img src="img/racism.png" height="40" /> Racista
+              </button>
             </li>
 
             <li id="misogynistic-answer" class="answer">
-              <button id="misoginy" type="button" class="btn btn-lg btn-default btn-answer">Misógino</button>
+              <button id="misoginy" type="button" class="btn btn-default btn-answer">
+                <img src="img/misoginy.png" height="40" /> Misógino
+              </button>
             </li>
 
             <li id="political-answer" class="answer">
-              <button id="political" type="button" class="btn btn-lg btn-default btn-answer">Ideológico</button>
+              <button id="political" type="button" class="btn btn-default btn-answer">
+                <img src="img/political.png" height="40" /> Ideológico
+              </button>
             </li>
-
-            <li id="other-answer" class="answer">
-              <button id="other" type="button" class="btn btn-lg btn-default btn-answer">Otro</button>
+            
+            <li id="other-answer" class="answer input-group li-other">
+                <input id="other-input" type="text" class="form-control input-other" placeholder="Otro tipo" aria-label="Otro tipo">
+                <span class="input-group-btn">
+                  <button id="other" type="button" class="btn btn-default button-other">Otro</button>
+                </span>
             </li>
 
             <li class="answer">
@@ -146,7 +167,7 @@
             data-size="small">
             Twittear
           </a>
-          <a href="whatsapp://send" data-text="Clasificá tweets y divertite" data-href="" class="wa_btn wa_btn_s"
+          <a href="whatsapp://send" data-text="¿Reconoces el odio?" data-href="" class="wa_btn wa_btn_s"
             style="display:none">
             Compartir
           </a>
@@ -160,7 +181,7 @@
     </footer>
   </div>
   <div id="about" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">about
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -172,72 +193,87 @@
           <h4>Instrucciones</h4>
 
           <p>
-            Dado el tweet que se muestra en pantalla, ¿lo considerás humorístico? En caso positivo, apretá el
-            botón "Sí", y elegí qué tan gracioso le parece del 1 al 5 (representado por los 5 emojis).
-            En caso que no, apretá en "No". Si no estás seguro, poné "Saltear". Luego de esto, se mostrará otro tweet
+            Dado el tweet que se muestra en pantalla, ¿lo considerás discurso de odio? En caso positivo, apretá el
+            botón "Sí".
+            En caso que no, apretá en "No". Si no estás seguro, seleccioná "Saltear". Luego de esto, se mostrará otro tweet
             y
             se repite el procedimiento de anotación.
           </p>
 
           <p>
-            En un segundo nivel de importancia, también nos interesa saber si los tweets son ofensivos. Entonces,
-            antes
-            de indicar si son humoristicos, tildá la casilla de verificación que dice "Ofensivo" si te parece que el
-            tweet
-            que aparece en pantalla es ofensivo.
+            Cada tanto se mostrará un tweet que ya ha sido clasificado para que identifiques el tipo de odio que contiene.
+            Si no identificás ninguno de los tipos sugeridos, seleccioná la opción "Otro" completando el campo adyacente con el tipo de odio que creés que contiene.
           </p>
 
-          <hr>
+          <p>
+            En un segundo nivel de importancia, también nos interesa saber si los tweets contienen lenguaje ofensivo. Entonces,
+            antes
+            de indicar si contienen discurso de odio, tildá la casilla de verificación que dice "Ofensivo" si te parece que el
+            tweet
+            que aparece en pantalla contiene lenguaje ofensivo.
+          </p>
+
+          <hr />
+
+          <h4>Ejemplos</h4>
+          <p>
+            Tweet <b>con</b> odio, <b>sin</b> lenguaje ofensivo:
+          </p>
+          <div class="tweet" id="unk-tweet">
+              <p class="tweet-text" id="unk-tweet-text">Vieja ignorante, Uds la comu lgbti quieren imponer su ideología de género a nuestros hijos y nietos..........respeten.......!!!!!!!</p>
+              <img class="tweet-logo" src="img/twitter.ico" alt="Twitter" />
+          </div>
+
+          <p>Tweet <b>sin</b> odio, <b>con</b> lenguaje ofensivo:</p>
+          <div class="tweet" id="unk-tweet">
+              <p class="tweet-text" id="unk-tweet-text">Jajajjaj trola de mierda</p>
+              <img class="tweet-logo" src="img/twitter.ico" alt="Twitter" />
+          </div>
+          <p>
+          El tweet anterior no lo consideramos discurso de odio porque la intención no es degradar o menospreciar a quien esta dirigido,
+          aludiendo a una característica que le hace pertenecer a algún grupo.
+          </p>
+          <p>
+          Tweet <b>con</b> odio <b>y</b> lenguaje ofensivo:
+          </p>
+          <div class="tweet" id="unk-tweet">
+              <p class="tweet-text" id="unk-tweet-text">Me van a recontra putear pero hay que matar a todos esos negros hijos de puta! Se cagan en la vida de los demás</p>
+              <img class="tweet-logo" src="img/twitter.ico" alt="Twitter" />
+          </div>
+
+          <hr />
 
           <h4>Sobre el proyecto</h4>
 
           <p>
-            El fin de esta página es armar una base de datos de opiniones sobre humor durante febrero de 2019,
-            y así hacer investigación sobre
-            <a href="https://es.wikipedia.org/wiki/Humor_computacional" target="_blank">Humor Computacional</a>.
+            El fin de esta página es armar una base de datos que represente la idea de odio que tiene la gente,
+            y así hacer investigación sobre reconociemiento y detección de discurso de odio automáticos.
           </p>
-          <p>
-            Por ejemplo, va a usarse como conjunto de datos para
-            <a href="https://www.fing.edu.uy/inco/grupos/pln/haha/" target="_blank">la competencia HAHA 2019 (2ª
-              edición)</a>,
-            organizada por el
-            <a href="https://www.fing.edu.uy/inco/grupos/pln" target="_blank">Grupo de Procesamiento de Lenguaje
-              Natural
-              (PLN)</a> de la
-            <a href="https://www.fing.edu.uy" target="_blank">Facultad de Ingeniería</a> de la
-            <a href="http://www.universidad.edu.uy/" target="_blank">Universidad de la República</a>, Uruguay.
-            La competencia consiste básicamente en predecir si un tweet es humorístico o no, y también decir qué tan
-            gracioso le puede resultar a la gente 😲 Si te interesa, podés participar.
-          </p>
-          <p>El código de este proyecto
-            <a href="https://github.com/pln-fing-udelar/pghumor-clasificahumor" target="_blank">se encuentra
+          <!--p>El código de este proyecto
+            <a href="https://github.com/luchong12/IDORS-web" target="_blank">se encuentra
               disponible
               en GitHub</a>.
-          </p>
+          </p-->
           <p>
             Gracias a tu ayuda, vamos a poder obtener una base de datos de buena calidad. ¡¡¡MUCHAS GRACIAS!!!
           </p>
-
+          <br />
           <h4>Historia del proyecto</h4>
 
           <p>
-            La página fue creada en 2014 por dos estudiantes de Ingeniería en Computación,
-            (<a href="https://github.com/bryant1410" target="_blank">Santiago Castro</a> y
-            <a href="https://www.fing.edu.uy/~mcubero/" target="_blank">Matías Cubero</a>)
-            originalmente para el proyecto de grado
-            <a href="https://github.com/pln-fing-udelar/pghumor" target="_blank">pgHumor</a>
-            – Universidad de la República, Uruguay, apoyados por la
-            <a href="http://www.anii.org.uy" target="_blank">ANII</a>. En 2018 se volvió a lanzar para tener más
-            anotaciones y de mejor calidad 😊, para la 1ª edición de la competencia HAHA.
+            La página es una adaptación realizada por Manuel Saravia y Lucas Kunc del proyecto
+            <a href="https://clasificahumor.com/" target="_blank">https://clasificahumor.com/</a>,
+            creado por Santiago Castro y Matías Cubero (especial agradecimiento a ellos), y se utilizará
+            para el proyecto de grado
+            <a href="https://github.com/manuel-saravia/proygrado2019-IDORS" target="_blank">IDORS</a>
+            – Universidad de la República, Uruguay.
           </p>
-
+          <br />
           <h4>Cookies</h4>
 
           <p>
             Este sitio usa cookies para hacer un seguimiento de qué tweets ya clasificó cada persona, y evitar mostrar
-            repetidos. También usa <a href="https://analytics.google.com/analytics/web/" target="_blank">Google
-              Analytics</a> para conocer información general sobre los anotadores (país, idioma, género, rango etario,
-            etc).
+            repetidos.
           </p>
         </div>
         <div class="modal-footer">
