@@ -45,7 +45,6 @@ const createRecord = (knex, data) => {
 
 exports.seed = function(knex) {
   return knex('tweets')
-          .del()
           .then(() => {
             const tweets = getTweets();
             return tweets;
