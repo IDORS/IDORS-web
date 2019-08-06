@@ -1,63 +1,58 @@
 const fs = require('fs');
 
-const readFileAndGetJSON = (file) => {
-  const text = fs.readFileSync(file, { encoding: 'utf-8' });
-  const tweets = [];
-  text.split('\n').forEach((line) => {
-    if (line.length == 0) return;
-    const json = JSON.parse(line);
-    tweets.push(json);
-  });
-
-  return tweets;
-};
-
-const getTweets = () => {
-  const tweets = [];
-  const folders = fs.readdirSync('tweets');
-
-  folders.forEach((folder) => {
-    const tweetFiles = fs.readdirSync('tweets/' + folder + '/');
-
-    tweetFiles.forEach((fileName) => {
-      tweets.push(readFileAndGetJSON('tweets/' + folder + '/' + fileName));
-    });
-  });
-
-  return tweets;
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const createRecord = (knex, data) => {
-  return knex('tweets')
+const readFileAndInsert = async function(file, knex) {
+  const text = fs.readFileSync(file, { encoding: 'utf-8' });
+  const tweetPromises = [];
+  var count = 0;
+  text.split('\n').forEach((line) => {
+    if (line.length == 0) { 
+      console.log(file, 'aca', count); 
+      return;
+    }
+    count++;
+    const tweet = JSON.parse(line);
+    const {id, user, text} = tweet;
+    tweetPromises.push(createRecord(knex, {id, user, text}));
+    tweetPromises.push(sleep(2000));
+  });
+  
+  return Promise.all(tweetPromises)
+};
+
+const createRecord = async function (knex, data) {
+  return await knex('tweets')
           .insert({
             id   : data.id,
             user : data.user,
             text : data.text,
           })
-          .whereNotExists(
-            knex('tweets')
-              .select('*')
-              .where('id', data.id))
-          .catch(() => {
-            console.log(data.id);
-          });
+          .catch((error) => {
+            if (error.code != 'ER_DUP_ENTRY') {
+              return createRecord(knex, data);
+            } else {
+              console.log(data.id, erroc.code);
+            }
+          })
 };
 
 exports.seed = function(knex) {
   return knex('tweets')
           .then(() => {
-            const tweets = getTweets();
-            return tweets;
-          })
-          .then((unmergedTweets) => [].concat.apply([], unmergedTweets))
-          .then((allTweets) => {
-            const tweetPromises = [];
+            const folders = fs.readdirSync('tweets');
+            const insertedTweets = [];
 
-            allTweets.forEach((tweet) => {
-              const {id, user, text} = tweet;
-              tweetPromises.push(createRecord(knex, {id, user, text}));
-            })
+            folders.forEach((folder) => {
+              const tweetFiles = fs.readdirSync('tweets/' + folder + '/');
 
-            return Promise.all(tweetPromises);
+              tweetFiles.forEach((fileName) => {
+                insertedTweets.push(readFileAndInsert('tweets/' + folder + '/' + fileName, knex));
+              });
+            });
+            
+            return Promise.all(insertedTweets)
           });
 };
