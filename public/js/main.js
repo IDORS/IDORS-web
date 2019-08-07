@@ -139,54 +139,81 @@ function setUiListeners() {
     }); */
 
     $hate.click(function () {
+        toggleButtons('all', false);
         vote('1');
         $hate.addClass('no-hover');
     });
 
-    $hate.on('mousemove mouswdown', function () {
+    $hate.on('mousemove mousewdown', function () {
         $hate.removeClass('no-hover');
     });
 
     $notHate.click(function () {
+        toggleButtons('all', false);
         vote('0');
         $notHate.addClass('no-hover');
     });
 
-    $notHate.on('mousemove mouswdown', function () {
+    $notHate.on('mousemove mousewdown', function () {
         $notHate.removeClass('no-hover');
     });
 
     $voteM.click(function () {
+        toggleButtons('all', false);
         voteType('misoginy');
     });
 
     $voteR.click(function () {
+        toggleButtons('all', false);
         voteType('racism');
     });
 
     $voteH.click(function () {
+        toggleButtons('all', false);
         voteType('homophobia');
     });
 
     $voteP.click(function () {
+        toggleButtons('all', false);
         voteType('political');
     });
 
     $voteO.click(function () {
+        toggleButtons('all', false);
         voteType('other');
     });
 
     $skipHate.click(function () {
+        toggleButtons('all', false);
         vote('2', true);
     });
 
-    $skipSubclass.click(function () {
+    $skipSubclass.click(function () 
+    {
+        toggleButtons('all', false);
         voteType('skip');
     });
 
     $('button').mouseup(function () {
         $(this).blur();
     });
+}
+
+function toggleButtons(mode, enabled) {
+    if(mode === 'hate' || mode === 'all') {
+        $hate.prop('disabled', !enabled);
+        $notHate.prop('disabled', !enabled);
+        $skipHate.prop('disabled', !enabled);
+    }
+
+    if(mode === 'subclass' || mode === 'all') {
+        $voteM.prop('disabled', !enabled);
+        $voteO.prop('disabled', !enabled);
+        $voteH.prop('disabled', !enabled);
+        $voteP.prop('disabled', !enabled);
+        $voteR.prop('disabled', !enabled);
+        $skipSubclass.prop('disabled', !enabled);
+    }
 }
 
 function changeMode(mode) {
@@ -244,20 +271,26 @@ function vote(voteOption, skip=false) {
 
         if(tweets.length === 0 && !classifiedAvailable) {            
             getClassifiedTweet(() => {
-                if(classifiedAvailable)
+                if(classifiedAvailable) {
                     changeMode('subclass');
+                    toggleButtons('subclass', true);
+                }
                 else
                     changeMode('end');
             });
         }
-        else if(voteCount >= 2) {
-            if(classifiedAvailable)
+        else { 
+            if(voteCount >= 2 && classifiedAvailable) {
                 voteCount = 0;
-            else
-                getClassifiedTweet();
+                toggleButtons('subclass', true);
+            }
+            else {
+                if(voteCount >= 2)
+                    getClassifiedTweet();
+                
+                toggleButtons('hate', true);
+            }
         }
-        
-        
     }, 'json');
 
     $.mdtoast(toastText(voteOption), {duration: 3000});
@@ -282,9 +315,12 @@ function voteType(voteOption) {
             if(!$.isEmptyObject(tweet)) {
                 classifiedTweet = tweet;
                 showTweet(classifiedTweet);
+                toggleButtons('subclass', true);
             } else
                 changeMode('end');
         }
+        else
+            toggleButtons('hate', true);
     }, 'json');
 
     $('#other-input').val('');
