@@ -28,7 +28,7 @@ exports.getRandomNotDone = async function(limit, session_id, excluded = []) {
                                                                         HAVING COUNT(*) < 5) b ON t.id = b.tweet_id
                                                             LEFT JOIN (SELECT * FROM votesIsHateful WHERE session_id = ?) a ON a.tweet_id = t.id
                                     WHERE a.session_id IS NULL AND find_in_set(t.id, ?) = 0
-                                    ORDER BY c, RAND()
+                                    ORDER BY c DESC, RAND()
                                     LIMIT ?`, [session_id, excluded.join(','), limit]);
     return tweets;
 }
