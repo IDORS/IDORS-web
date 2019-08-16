@@ -18,12 +18,11 @@ CREATE TABLE IF NOT EXISTS `pgodio`.`tweets` (
 );
 
 CREATE TABLE IF NOT EXISTS `pgodio`.`votesIsHateful` (
-  `id` INT NOT NULL AUTO_INCREMENT,
   `is_hateful` TINYINT(1) NOT NULL,
   `is_offensive` TINYINT(1) NOT NULL,
   `tweet_id` VARCHAR(21) NOT NULL,
   `session_id`  VARCHAR(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`tweet_id`,`session_id`),
   INDEX `tweet_id_idx` (`tweet_id` ASC),
   FOREIGN KEY (`tweet_id`) REFERENCES `pgodio`.`tweets` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`session_id`) REFERENCES `pgodio`.`sessions` (`session_id`) ON DELETE CASCADE
