@@ -5,10 +5,6 @@ let $homeContent;
 let $tweet;
 let $hatefulTweet;
 let $hate;
-/* let $votesAndToolbox;
-let $toolbox;
-let $voteClass; 
-let $legendVote; */
 let $voteH;
 let $voteR;
 let $voteM;
@@ -18,8 +14,6 @@ let $notHate;
 let $skipHate;
 let $skipSubclass;
 let $isOffensive;
-
-// let legendsShownForFirstTime = false;
 
 const voteCodeToText = {
     'homophobia': "Homofóbico",
@@ -39,7 +33,6 @@ $(document).ready(function () {
     setupPlaceload();
     getRandomTweets();
     setUiListeners();
-    //moveToolboxIfOutside();
 });
 
 function setupElements() {
@@ -48,10 +41,6 @@ function setupElements() {
     $tweet = $('#unk-tweet-text');
     $hatefulTweet = $('#hateful-tweet-text');
     $hate = $('#hate');
-    /* $votesAndToolbox = $('#votes,#toolbox');
-    $toolbox = $('#toolbox');
-    $voteClass = $('.vote');
-    $legendVote = $('.legend-vote'); */
     $voteH = $('#homophobia');
     $voteR = $('#racism');
     $voteM = $('#misoginy');
@@ -121,23 +110,6 @@ function getClassifiedTweet(callback) {
 }
 
 function setUiListeners() {
-    /* $humor.click(function () {
-        if (!legendsShownForFirstTime) {
-            $legendVote.stop().fadeTo('slow', 1, function () {
-                setTimeout(function () {
-                    $legendVote.stop().fadeTo('slow', 0, function () {
-                        $legendVote.css('opacity', '');
-                    });
-                }, 1000);
-            });
-            legendsShownForFirstTime = true;
-        }
-    });
-
-    $humor.hover(function () {
-        $votesAndToolbox.css('display', '');
-    }); */
-
     $hate.click(function () {
         toggleButtons('all', false);
         vote('1');
@@ -345,20 +317,3 @@ function toastText(voteOption) {
 function removeNonWords(text) {
     return text.replace(/[^\w\sáéíóúÁÉÍÓÚüÜñÑ]/g, "");
 }
-
-/* function moveToolboxIfOutside() {
-    const x = $toolbox[0].getBoundingClientRect().x;
-    if (x < 0) {
-        const translation = -x + 10;
-        addPxToLeft($toolbox, translation);
-        addPxToLeft($vote1, translation);
-        addPxToLeft($vote2, translation);
-        addPxToLeft($vote3, translation);
-        addPxToLeft($vote4, translation);
-        addPxToLeft($vote5, translation);
-    }
-} */
-
-/* function addPxToLeft(element, translation) {
-    element.css('left', (parseInt(element.css('left')) + translation).toString() + "px");
-} */
