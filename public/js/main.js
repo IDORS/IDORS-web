@@ -195,7 +195,11 @@ function changeMode(mode) {
             $('#answers').fadeIn(200);
         });
         $('.question').fadeOut(200, () => {
-            $('.question').html("¿El tweet profesa <a href=\"https://es.wikipedia.org/wiki/Discurso_de_odio\" target=\"_blank\">discurso de odio</a>?");
+            $('.question').html(
+                "¿El tweet profesa " + 
+                "<a id=\"hateDef\" class=\"btn btn-link btn-inline\" type=\"button\" data-toggle=\"modal\" data-target=\"#hate-def\">" +
+                    "discurso de odio" +
+                "</a>?");
             $('.question').fadeIn(200);
         });
         showTweet(tweets[0]);

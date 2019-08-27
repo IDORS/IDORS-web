@@ -94,7 +94,11 @@
         </div>
 
         <div id="form-container">
-          <p class="question">¿El tweet profesa <a href="https://es.wikipedia.org/wiki/Discurso_de_odio" target="_blank">discurso de odio</a>?</p>
+          <p class="question">¿El tweet profesa 
+            <a id="hateDef" class="btn btn-link btn-inline" type="button" data-toggle="modal" data-target="#about">
+              discurso de odio
+            </a>
+          ?</p>
 
           <ul id="answers" class="answers">
             <li id="hate-answer" class="answer">
@@ -180,6 +184,7 @@
       </div>
     </footer>
   </div>
+
   <div id="about" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -278,6 +283,41 @@
             repetidos. También usa <a href="https://analytics.google.com/analytics/web/" target="_blank">Google Analytics</a> 
             para conocer información general sobre los anotadores (país, idioma, género, rango etario, etc). 
           </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="hate-def" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">¿Qué es el Discurso de Odio?</h4>
+        </div>
+        <div class="modal-body">
+          Según John T. Nockleby en su <i>Encyclopedia of American Constitution</i>, 
+          <b>discurso de odio</b> (<i>hate speech</i> en inglés) es cualquier expresión de 
+          animosidad o menosprecio hacia un individuo o grupo basada en una  
+          característica compartida por un grupo como la raza, color de piel, 
+          origen nacional, género, discapacidad, religión u orientación sexual.
+          <br>
+          <br>
+          La misma no se aleja de lo que se considera como incitación al odio
+          en la Ley Nº 17.677 del código penal uruguayo, que lo define como 
+          "...violencia moral o física contra una o más personas en razón 
+          del color de su piel, su raza, religión, origen nacional o étnico, 
+          orientación sexual o identidad sexual...".
+          <br>
+          <br>
+          Es útil que tengas en cuenta tanto las definiciones mencionadas anteriormente 
+          como tu propia noción de lo que pensás que es el discurso de odio a la hora
+          de clasificar cada tweet.
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
