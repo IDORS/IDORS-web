@@ -201,3 +201,10 @@ footer {
 .button-other {
   height: 52px
 }
+
+.btn-link.btn-inline {
+  /* outline: none !important; */
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+}
