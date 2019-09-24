@@ -197,7 +197,7 @@ function changeMode(mode) {
         $('.question').fadeOut(200, () => {
             $('.question').html(
                 "¿El tweet profesa " + 
-                "<a id=\"hateDef\" class=\"btn btn-link btn-inline\" type=\"button\" data-toggle=\"modal\" data-target=\"#hate-def\">" +
+                "<a id=\"hateDef\" class=\"btn btn-link btn-inline\" data-toggle=\"modal\" data-target=\"#hate-def\">" +
                     "discurso de odio" +
                 "</a>?");
             $('.question').fadeIn(200);
