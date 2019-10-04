@@ -101,19 +101,20 @@
           ?</p>
 
           <ul id="answers" class="answers">
-            <li id="hate-answer" class="answer">
-              <button id="hate" type="button" class="btn btn-lg btn-default btn-answer">Sí</button>
+            <li id="hate-nonoffensive-answer" class="answer">
+              <button id="hate-nonoffensive" type="button" class="btn btn-lg btn-default btn-answer">Sí</button>
             </li>
 
-            <li id="not-hate-answer" class="answer">
-              <button id="not-hate" type="button" class="btn btn-lg btn-default btn-answer">No</button>
+            <li id="hate-offensive-answer" class="answer">
+              <button id="hate-offensive" type="button" class="btn btn-lg btn-default btn-answer">Sí, además es grosero</button>
             </li>
 
-            <li class="answer is-offensive-li">
-              <label id="is-offensive-label" for="is-offensive">
-                <input id="is-offensive" type="checkbox" />
-                Lenguaje Ofensivo
-              </label>
+            <li id="not-hate-nonoffensive-answer" class="answer">
+              <button id="not-hate-nonoffensive" type="button" class="btn btn-lg btn-default btn-answer">No</button>
+            </li>
+
+            <li id="not-hate-offensive-answer" class="answer">
+              <button id="not-hate-offensive" type="button" class="btn btn-lg btn-default btn-answer">No, aunque es grosero</button>
             </li>
 
             <li class="answer">
@@ -200,22 +201,15 @@
           <p>
             Dado el tweet que se muestra en pantalla, ¿lo considerás discurso de odio? En caso positivo, apretá el
             botón "Sí".
-            En caso que no, apretá en "No". Si no estás seguro, seleccioná "Saltear". Luego de esto, se mostrará otro tweet
-            y
-            se repite el procedimiento de anotación.
+            En caso que no, apretá "No". Además, nos interesa saber si los tweets contienen
+            lenguaje grosero, por lo que si el tweet tiene discurso de odio y es grosero apretá "Sí, además es grosero" y si no tiene discurso de odio
+            pero es grosero apretá "No, aunque es grosero". Si no estás seguro de como clasificar el tweet, seleccioná "Saltear". 
+            Luego de esto, se mostrará otro tweet y se repite el procedimiento de anotación.
           </p>
 
           <p>
             Cada tanto se mostrará un tweet que ya ha sido clasificado para que identifiques el tipo de odio que contiene.
             Si no identificás ninguno de los tipos sugeridos, seleccioná la opción "Otro" completando el campo adyacente con el tipo de odio que creés que contiene.
-          </p>
-
-          <p>
-            En un segundo nivel de importancia, también nos interesa saber si los tweets contienen lenguaje ofensivo. Entonces,
-            antes
-            de indicar si contienen discurso de odio, tildá la casilla de verificación que dice "Lenguaje ofensivo" si te parece que el
-            tweet
-            que aparece en pantalla contiene lenguaje ofensivo.
           </p>
 
           <hr />
