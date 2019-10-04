@@ -4,13 +4,15 @@ let $star;
 let $homeContent;
 let $tweet;
 let $hatefulTweet;
-let $hate;
+let $hateOffensive;
+let $notHateOffensive;
+let $hateNonOffensive;
+let $notHateNonOffensive;
 let $voteH;
 let $voteR;
 let $voteM;
 let $voteP;
 let $voteO;
-let $notHate;
 let $skipHate;
 let $skipSubclass;
 let $isOffensive;
@@ -23,6 +25,7 @@ const voteCodeToText = {
     'other': "Otro"
 };
 
+let question = $('.question').html();
 let tweets = [];
 let classifiedTweet = null;
 let classifiedAvailable = false;
@@ -40,13 +43,15 @@ function setupElements() {
     $homeContent = $('#home-content');
     $tweet = $('#unk-tweet-text');
     $hatefulTweet = $('#hateful-tweet-text');
-    $hate = $('#hate');
+    $hateOffensive = $('#hate-offensive');
+    $hateNonOffensive = $('#hate-nonoffensive');
+    $notHateOffensive = $('#not-hate-offensive');
+    $notHateNonOffensive = $('#not-hate-nonoffensive');
     $voteH = $('#homophobia');
     $voteR = $('#racism');
     $voteM = $('#misoginy');
     $voteP = $('#political');
     $voteO = $('#other');
-    $notHate = $('#not-hate');
     $skipHate = $('#answers .btn-skip');
     $skipSubclass = $('#answers-subclass .btn-skip');
     $isOffensive = $('#is-offensive');
@@ -110,24 +115,44 @@ function getClassifiedTweet(callback) {
 }
 
 function setUiListeners() {
-    $hate.click(function () {
+    $hateOffensive.click(function () {
         toggleButtons('all', false);
-        vote('1');
-        $hate.addClass('no-hover');
+        vote('1', '1');
+        $hateOffensive.addClass('no-hover');
     });
 
-    $hate.on('mousemove mousewdown', function () {
-        $hate.removeClass('no-hover');
+    $hateOffensive.on('mousemove mousewdown', function () {
+        $hateOffensive.removeClass('no-hover');
     });
 
-    $notHate.click(function () {
+    $notHateOffensive.click(function () {
         toggleButtons('all', false);
-        vote('0');
-        $notHate.addClass('no-hover');
+        vote('0', '1');
+        $notHateOffensive.addClass('no-hover');
     });
 
-    $notHate.on('mousemove mousewdown', function () {
-        $notHate.removeClass('no-hover');
+    $notHateOffensive.on('mousemove mousewdown', function () {
+        $notHateOffensive.removeClass('no-hover');
+    });
+
+    $hateNonOffensive.click(function () {
+        toggleButtons('all', false);
+        vote('1', '0');
+        $hateNonOffensive.addClass('no-hover');
+    });
+
+    $hateNonOffensive.on('mousemove mousewdown', function () {
+        $hateNonOffensive.removeClass('no-hover');
+    });
+
+    $notHateNonOffensive.click(function () {
+        toggleButtons('all', false);
+        vote('0', '0');
+        $notHateNonOffensive.addClass('no-hover');
+    });
+
+    $notHateNonOffensive.on('mousemove mousewdown', function () {
+        $notHateNonOffensive.removeClass('no-hover');
     });
 
     $voteM.click(function () {
@@ -173,8 +198,10 @@ function setUiListeners() {
 
 function toggleButtons(mode, enabled) {
     if(mode === 'hate' || mode === 'all') {
-        $hate.prop('disabled', !enabled);
-        $notHate.prop('disabled', !enabled);
+        $hateOffensive.prop('disabled', !enabled);
+        $hateNonOffensive.prop('disabled', !enabled);
+        $notHateOffensive.prop('disabled', !enabled);
+        $notHateNonOffensive.prop('disabled', !enabled);
         $skipHate.prop('disabled', !enabled);
     }
 
@@ -195,11 +222,7 @@ function changeMode(mode) {
             $('#answers').fadeIn(200);
         });
         $('.question').fadeOut(200, () => {
-            $('.question').html(
-                "¿El tweet profesa " + 
-                "<a id=\"hateDef\" class=\"btn btn-link btn-inline\" data-toggle=\"modal\" data-target=\"#hate-def\">" +
-                    "discurso de odio" +
-                "</a>?");
+            $('.question').html(question);
             $('.question').fadeIn(200);
         });
         showTweet(tweets[0]);
@@ -223,7 +246,7 @@ function changeMode(mode) {
     }
 }
 
-function vote(voteOption, skip=false) {
+function vote(voteOption, isOffensive, skip=false) {
     const currentTweet = tweets.shift();
     
     if(tweets.length > 0 && !classifiedAvailable) {
@@ -237,7 +260,7 @@ function vote(voteOption, skip=false) {
         isHateful: voteOption,
         skip,
         ignoreTweetIds: [tweets.length > 0 ? tweets[0].id : '', tweets.length > 1 ? tweets[1].id : ''],
-        isOffensive: ($isOffensive.prop('checked') == true) ? '1' : '0',
+        isOffensive
     }, function (tweet) {        
         if(!$.isEmptyObject(tweet))
             tweets.push(tweet);
