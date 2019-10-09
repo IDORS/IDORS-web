@@ -14,14 +14,14 @@ const readFileAndGetJSON = function(file) {
   return tweets;
 };
 
-const createRecords = async function (knex, data) {
+const createRecords = async function (knex, data, tries=0) {
   return await knex.raw(
                 knex('tweets')
                   .insert(data)
                   .toString()
                   .replace('insert', 'INSERT IGNORE'))
               .catch((error) => {
-                if (error.code == 'ER_LOCK_DEADLOCK') return createRecords(knex, data);
+                if (error.code == 'ER_LOCK_DEADLOCK' && tries < 15) return createRecords(knex, data, ++tries);
                 else console.log(error.code);
               });
 };
@@ -29,11 +29,11 @@ const createRecords = async function (knex, data) {
 exports.seed = async function(knex) {
   return knex('tweets')
           .then(() => {
-            const folders = fs.readdirSync('tweets');
+            const hateTweetsFolders = fs.readdirSync('tweets');
             const insertionPromises = [];
             const includedTweets = new Set([]);
 
-            folders.forEach((folder) => {
+            hateTweetsFolders.forEach((folder) => {
               const tweetsInFolder = []; //Tweets from the folder that will be inserted
               const tweetsInEachFile = []; //Tweets in each file of the folder
               var totalInFolder = 0; //Total number of tweets in this folder
