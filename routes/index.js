@@ -48,6 +48,7 @@ router.get('/tweets/classified/random', async function(req, res, next) {
     }
 });
 
+/* Add an "isHateful" and "isOffensive" vote for a tweet */
 router.post('/vote', async function(req, res, next) {
     try {
         debug(req.body.tweetId, req.body.isOffensive, req.body.isHateful);
@@ -83,6 +84,7 @@ router.post('/vote', async function(req, res, next) {
     }
 });
 
+/* Add "hateType" vote for a tweet */
 router.post('/vote/hateType', async function(req, res, next) {
     try {
         debug(req.body.tweetId, req.body.hateType);

@@ -8,11 +8,7 @@ let $hateOffensive;
 let $notHateOffensive;
 let $hateNonOffensive;
 let $notHateNonOffensive;
-let $voteH;
-let $voteR;
-let $voteM;
-let $voteP;
-let $voteO;
+let $hateTypeButtons;
 let $skipHate;
 let $skipSubclass;
 let $isOffensive;
@@ -47,11 +43,13 @@ function setupElements() {
     $hateNonOffensive = $('#hate-nonoffensive');
     $notHateOffensive = $('#not-hate-offensive');
     $notHateNonOffensive = $('#not-hate-nonoffensive');
-    $voteH = $('#homophobia');
-    $voteR = $('#racism');
-    $voteM = $('#misoginy');
-    $voteP = $('#political');
-    $voteO = $('#other');
+    $hateTypeButtons = {
+        'homophobia': $('#homophobia'),
+        'racism': $('#racism'),
+        'misoginy': $('#misoginy'),
+        'political': $('#political'),
+        'other': $('#other')
+    };
     $skipHate = $('#answers .btn-skip');
     $skipSubclass = $('#answers-subclass .btn-skip');
     $isOffensive = $('#is-offensive');
@@ -155,27 +153,27 @@ function setUiListeners() {
         $notHateNonOffensive.removeClass('no-hover');
     });
 
-    $voteM.click(function () {
-        toggleButtons('all', false);
-        voteType('misoginy');
-    });
-
-    $voteR.click(function () {
-        toggleButtons('all', false);
-        voteType('racism');
-    });
-
-    $voteH.click(function () {
+    $hateTypeButtons.homophobia.click(function () {
         toggleButtons('all', false);
         voteType('homophobia');
     });
 
-    $voteP.click(function () {
+    $hateTypeButtons.racism.click(function () {
+        toggleButtons('all', false);
+        voteType('racism');
+    });
+
+    $hateTypeButtons.misoginy.click(function () {
+        toggleButtons('all', false);
+        voteType('misoginy');
+    });
+
+    $hateTypeButtons.political.click(function () {
         toggleButtons('all', false);
         voteType('political');
     });
 
-    $voteO.click(function () {
+    $hateTypeButtons.other.click(function () {
         toggleButtons('all', false);
         voteType('other');
     });
@@ -206,11 +204,9 @@ function toggleButtons(mode, enabled) {
     }
 
     if(mode === 'subclass' || mode === 'all') {
-        $voteM.prop('disabled', !enabled);
-        $voteO.prop('disabled', !enabled);
-        $voteH.prop('disabled', !enabled);
-        $voteP.prop('disabled', !enabled);
-        $voteR.prop('disabled', !enabled);
+        for(button in $hateTypeButtons) {
+            $hateTypeButtons[button].prop('disabled,', !enabled);
+        }
         $skipSubclass.prop('disabled', !enabled);
     }
 }
