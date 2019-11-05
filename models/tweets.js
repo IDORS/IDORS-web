@@ -46,12 +46,16 @@ exports.getRandomClassified = async function(limit, session_id) {
 exports.skipTweet = async function(tweetId) {
     return await db.query(`UPDATE tweets 
                            SET tweets.skip_count = tweets.skip_count + 1 
-                           WHERE tweets.id = ? `, [tweetId]);
+                           WHERE tweets.id = ?`, [tweetId]);
 }
 
 exports.saveVote = async function(tweetId, isHateful, isOffensive, session_id) {
     return await db.query(`INSERT INTO votesIsHateful (is_hateful, is_offensive, tweet_id, session_id)
                             VALUES (?, ?, ?, ?)`, [isHateful, isOffensive, tweetId, session_id])
+}
+
+exports.correctVote = async function(tweetId, session_id) {
+    return await db.query(`UPDATE votesIsHateful SET is_hateful = 0 WHERE tweet_id = ? AND session_id = ?`, [tweetId, session_id]);
 }
 
 exports.saveHateTypeVote = async function(tweetId, hateType, other, session_id) {

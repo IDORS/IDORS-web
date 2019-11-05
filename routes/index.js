@@ -92,8 +92,14 @@ router.post('/vote/hateType', async function(req, res, next) {
         const {tweetId, hateType, skip, other} = req.body;
 
         if (skip === 'false'){
-            await tweetsModel.saveHateTypeVote(tweetId, hateType, other, req.session.id);
-            debug('Inserted correctly');
+            if(hateType === 'notHate') {
+                await tweetsModel.correctVote(tweetId, req.session.id);
+                debug('Corrected correctly (?');
+            }
+            else {
+                await tweetsModel.saveHateTypeVote(tweetId, hateType, other, req.session.id);
+                debug('Inserted correctly');
+            }
         } else if(skip !== 'true') {
             throw new Error('Skip value is invalid.')
         }

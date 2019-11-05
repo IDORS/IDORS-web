@@ -48,7 +48,8 @@ function setupElements() {
         'racism': $('#racism'),
         'misoginy': $('#misoginy'),
         'political': $('#political'),
-        'other': $('#other')
+        'other': $('#other'),
+        'notHate': $('#not-hate-type')
     };
     $skipHate = $('#answers .btn-skip');
     $skipSubclass = $('#answers-subclass .btn-skip');
@@ -176,6 +177,11 @@ function setUiListeners() {
     $hateTypeButtons.other.click(function () {
         toggleButtons('all', false);
         voteType('other');
+    });
+
+    $hateTypeButtons.notHate.click(function () {
+        toggleButtons('all', false);
+        voteType('notHate');
     });
 
     $skipHate.click(function () {
@@ -326,7 +332,7 @@ function voteType(voteOption) {
 function toastText(voteOption) {
     if (voteOption === '1') {
         return "Clasificado como odioso. ¡Gracias!";
-    } else if (voteOption === '0') {
+    } else if (voteOption === '0' || voteOption === 'notHate') {
         return "Clasificado como no odioso. ¡Gracias!";
     } else if (voteOption === '2' || voteOption === 'skip') {
         return "Tweet salteado. ¡Gracias!";
