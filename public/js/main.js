@@ -186,7 +186,7 @@ function setUiListeners() {
 
     $skipHate.click(function () {
         toggleButtons('all', false);
-        vote('2', true);
+        vote('2', undefined, true);
     });
 
     $skipSubclass.click(function () 
