@@ -1,2 +1,3 @@
 # IDORS-web
-Web app for hate speech annotation
+
+Si quieres saber más sobre el proyecto, dirígete a https://idors.github.io/IDORS-web/.
