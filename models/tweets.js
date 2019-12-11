@@ -25,7 +25,7 @@ exports.getRandom = async function(limit) {
 exports.getRandomNotDone = async function(limit, session_id, excluded = []) {
     const [tweets] = await db.query(`SELECT t.id, t.user, t.text FROM tweets t LEFT JOIN (SELECT tweet_id, COUNT(*) as c FROM votesIsHateful
                                                                         GROUP BY tweet_id
-                                                                        HAVING COUNT(*) < 5) b ON t.id = b.tweet_id
+                                                                        HAVING COUNT(*) < 3) b ON t.id = b.tweet_id
                                                             LEFT JOIN (SELECT * FROM votesIsHateful WHERE session_id = ?) a ON a.tweet_id = t.id
                                     WHERE a.session_id IS NULL AND find_in_set(t.id, ?) = 0
                                     ORDER BY c DESC, RAND()
