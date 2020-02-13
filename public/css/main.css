@@ -209,10 +209,10 @@ footer {
   vertical-align: baseline;
 }
 
-.votes span {
-  display: inline-block; 
-}
-
-.votes span:nth-child(2) {
-  margin-left: 50px;
+.votes {
+  display: flex;
+  justify-content: space-evenly;
+  width: 50%;
+  margin: auto;
+  flex-wrap: wrap;
 }
