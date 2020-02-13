@@ -208,3 +208,11 @@ footer {
   border: 0;
   vertical-align: baseline;
 }
+
+.votes span {
+  display: inline-block; 
+}
+
+.votes span:nth-child(2) {
+  margin-left: 50px;
+}

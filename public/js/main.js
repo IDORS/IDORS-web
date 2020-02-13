@@ -12,6 +12,8 @@ let $hateTypeButtons;
 let $skipHate;
 let $skipSubclass;
 let $isOffensive;
+let $totalVotes;
+let $tweetsVoted;
 
 const voteCodeToText = {
     'homophobia': "Homofóbico",
@@ -32,6 +34,8 @@ $(document).ready(function () {
     setupPlaceload();
     getRandomTweets();
     setUiListeners();
+    refreshTweetsVoted();
+    setInterval(refreshTweetsVoted, 5000);
 });
 
 function setupElements() {
@@ -54,6 +58,17 @@ function setupElements() {
     $skipHate = $('#answers .btn-skip');
     $skipSubclass = $('#answers-subclass .btn-skip');
     $isOffensive = $('#is-offensive');
+    $tweetsVoted = $('#voted-tweets');
+    $totalVotes = $('#total-votes');
+}
+
+function refreshTweetsVoted() {
+    $.getJSON('votes/totalCount', function(result) {
+        $tweetsVoted.html(result.totalVotes.toString());
+    });
+    $.getJSON('votes/tweetCount', function(result) {
+        $totalVotes.html(result.votedTweets.toString());
+    })
 }
 
 function showTweet(tweet) {
@@ -292,6 +307,7 @@ function vote(voteOption, isOffensive, skip=false) {
                 toggleButtons('hate', true);
             }
         }
+        refreshTweetsVoted();
     }, 'json');
 
     $.mdtoast(toastText(voteOption), {duration: 3000});

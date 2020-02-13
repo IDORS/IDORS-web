@@ -3,6 +3,7 @@ const router = express.Router();
 const debug = require('debug')('idors:router');
 
 const tweetsModel = require('../models/tweets');
+const votesModel = require('../models/votes');
 
 /* GET home page. */
 router.get('/tweets/random', async function(req, res, next) {
@@ -109,6 +110,27 @@ router.post('/vote/hateType', async function(req, res, next) {
         const result = tweet.length === 0 ? {} : tweet[0];
         debug(tweet);
         res.send(result);
+    } catch(error) {
+        next(error);
+    }
+});
+
+/* Get total number of votes */
+router.get('/votes/totalCount', async function(req, res, next) {
+    try {
+        const totalCount = await votesModel.getTotalVotes();
+        res.send(totalCount);
+    } catch(error) {
+        next(error);
+    }
+});
+
+
+/* Get total number of voted tweets */
+router.get('/votes/tweetCount', async function(req, res, next) {
+    try {
+        const tweetCount = await votesModel.getVotedTweets();
+        res.send(tweetCount);
     } catch(error) {
         next(error);
     }
