@@ -64,10 +64,10 @@ function setupElements() {
 
 function refreshTweetsVoted() {
     $.getJSON('votes/tweetCount', function(result) {
-        $tweetsVoted.html(result.totalVotes.toString());
+        $tweetsVoted.html(result.votedTweets.toString());
     });
     $.getJSON('votes/totalCount', function(result) {
-        $totalVotes.html(result.votedTweets.toString());
+        $totalVotes.html(result.totalVotes.toString());
     })
 }
 
