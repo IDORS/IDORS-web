@@ -63,11 +63,11 @@ function setupElements() {
 }
 
 function refreshTweetsVoted() {
-    $.getJSON('votes/totalCount', function(result) {
-        $tweetsVoted.html(result.totalVotes.toString());
-    });
     $.getJSON('votes/tweetCount', function(result) {
-        $totalVotes.html(result.votedTweets.toString());
+        $tweetsVoted.html(result.votedTweets.toString());
+    });
+    $.getJSON('votes/totalCount', function(result) {
+        $totalVotes.html(result.totalVotes.toString());
     })
 }
 
