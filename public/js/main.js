@@ -250,7 +250,7 @@ function changeMode(mode) {
             $('#answers-subclass').fadeIn(200);
         });
         $('.question').fadeOut(200, () => {
-            $('.question').text("¡Ya clasificaste este Tweet! ¿Podés identificar que tipo de discurso de odio contiene?");
+            $('.question').text("¡Ya se ha votado a este tweet como discurso de odio! ¿Podés identificar que tipo contiene?");
             $('.question').fadeIn(200);
         });
         showTweet(classifiedTweet);
