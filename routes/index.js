@@ -80,7 +80,12 @@ router.post('/vote', async function(req, res, next) {
 
         const excluded = req.session.skipped ? req.body['ignoreTweetIds[]'].concat(req.session.skipped) : req.body['ignoreTweetIds[]'];
 
-        let tweets = await tweetsModel.getRandomNotDone(1, req.session.id, excluded, from_random);
+        let tweets;
+        if (req.session.voted_tweets % 2 == 0)
+            tweets = await tweetsModel.getRandomNotDone(1, req.session.id, excluded, from_random);
+        else
+            tweets = await tweetsModel.getRandomNotVoted(excluded, from_random, 1);
+        
         debug("con excluded", tweets);
         if(tweets.length === 0 && req.session.skipped && req.session.skipped.length > 0) {
             const first = req.session.skipped.shift();

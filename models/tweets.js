@@ -22,10 +22,19 @@ exports.getRandom = async function(limit) {
     return tweets;
 }
 
+exports.getRandomNotVoted = async function(excluded = [], from_random, limit) {
+    const [tweets] = await db.query(`SELECT t.id, t.user, t.text FROM tweets t 
+                                    WHERE t.id NOT IN (SELECT tweet_id FROM votesIsHateful) AND 
+                                        find_in_set(t.id, ?) = 0 AND 
+                                        t.from_random = ?
+                                    LIMIT ?`, [excluded.join(','), from_random, limit]);
+    return tweets;
+}
+
 exports.getRandomNotDone = async function(limit, session_id, excluded = [], from_random = 0) {
     const [tweets] = await db.query(`SELECT t.id, t.user, t.text FROM tweets t LEFT JOIN (SELECT tweet_id, COUNT(*) as c FROM votesIsHateful
                                                                         GROUP BY tweet_id
-                                                                        HAVING COUNT(*) < 3) b ON t.id = b.tweet_id
+                                                                        HAVING COUNT(*) < 2) b ON t.id = b.tweet_id
                                                             LEFT JOIN (SELECT * FROM votesIsHateful WHERE session_id = ?) a ON a.tweet_id = t.id
                                     WHERE a.session_id IS NULL AND find_in_set(t.id, ?) = 0 AND t.from_random = ?
                                     ORDER BY c DESC, RAND()
